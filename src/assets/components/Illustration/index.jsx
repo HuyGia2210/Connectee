@@ -20,14 +20,14 @@ export default function Illustration() {
       {/* Hình điện thoại thứ nhất (sau) */}
       <img
         src="/messenger-mockup-2.png"
-        alt="Messenger Screen 2"
+        alt="Connectee Screen 2"
         className="w-full rounded-xl shadow-xl opacity-90"
       />
 
       {/* Hình điện thoại thứ hai (trước) */}
       <img
         src="/messenger-mockup-1.png"
-        alt="Messenger Screen 1"
+        alt="Connectee Screen 1"
         className="absolute top-10 left-10 w-full rounded-xl shadow-2xl"
       />
     </div>

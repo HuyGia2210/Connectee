@@ -17,7 +17,7 @@ export default function Footer() {
         <span>from</span>
         <img
           src="/meta-logo.svg"
-          alt="Meta Logo"
+          alt="Connectee Logo"
           className="h-5"
         />
       </div>

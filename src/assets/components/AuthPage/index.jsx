@@ -1,26 +1,30 @@
 import Footer from "../Footer";
 import LoginForm from "../LoginForm";
-import HeaderNav from "./../HeaderNav/index";
-import Illustration from "./../Illustration/index";
-import Introsection from "./../IntroSection/index";
+import HeaderNav from "../HeaderNav";
+import Illustration from "../Illustration";
+import IntroSection from "../IntroSection";
 import "../../../App.css";
 
 export default function AuthPage() {
   return (
-    <>
-      <div className="homePage">
-        <HeaderNav />
-        <div className="grid grid-cols-2 grid-rows-2">
-          <div className="col-span-1 row-span-2">
-            <Introsection />
-            <LoginForm />
-          </div>
-          <div className="col-span-1 row-span-2 border">
-            <Illustration />
-          </div>
+    <div className="min-h-screen flex flex-col justify-between">
+      {/* Header */}
+      <HeaderNav />
+
+      {/* Content main */}
+      <div className="flex flex-col-reverse md:flex-row justify-between items-center px-8 py-12 flex-grow gap-10">
+        {/* Left side: Intro + Form */}
+        <div className="flex flex-col space-y-8 max-w-xl">
+          <IntroSection />
+          <LoginForm />
         </div>
-        <Footer />
+
+        {/* Right side: Illustration */}
+        <Illustration />
       </div>
-    </>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 }

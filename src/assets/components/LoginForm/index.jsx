@@ -42,7 +42,7 @@ export default function LoginForm() {
 
       {/* Tải xuống app */}
       <div className="mt-6 text-center text-gray-600 text-sm">
-        <p>Tải ứng dụng Messenger dành cho máy tính</p>
+        <p>Tải ứng dụng Connectee dành cho máy tính</p>
         <div className="flex justify-center space-x-4 mt-4">
           <img
             src="/appstore.png"
