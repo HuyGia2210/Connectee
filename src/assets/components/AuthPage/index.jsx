@@ -3,6 +3,7 @@ import LoginForm from "../LoginForm";
 import HeaderNav from "./../HeaderNav/index";
 import Illustration from "./../Illustration/index";
 import Introsection from "./../IntroSection/index";
+import "../../../App.css";
 
 export default function AuthPage() {
   return (
