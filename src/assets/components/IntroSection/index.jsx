@@ -7,7 +7,7 @@ export default function IntroSection() {
         Nơi dành cho những cuộc trò chuyện có ý nghĩa
       </h1>
       <p className="text-lg text-gray-600">
-        Messenger giúp bạn dễ dàng và nhanh chóng trò chuyện với những người thân yêu
+      Connectee giúp bạn dễ dàng và nhanh chóng trò chuyện với những người thân yêu
       </p>
     </section>
   );
