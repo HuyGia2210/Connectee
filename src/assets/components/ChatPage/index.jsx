@@ -1,4 +1,4 @@
-
+// src/assets/components/ChatPage/index.jsx
 import Sidebar from "../Sidebar";
 import ChatHeader from "../ChatHeader";
 import ChatBody from "../ChatBody";
