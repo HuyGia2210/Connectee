@@ -1,30 +1,42 @@
+import { useState } from "react";
 import Footer from "../Footer";
 import LoginForm from "../LoginForm";
-import HeaderNav from "../HeaderNav";
-import Illustration from "../Illustration";
-import IntroSection from "../IntroSection";
+import HeaderNav from "./../HeaderNav/index";
+import Illustration from "./../Illustration/index";
+import Introsection from "./../IntroSection/index";
 import "../../../App.css";
+import SignUpForm from "../SignUpForm";
 
 export default function AuthPage() {
+  const [showSignup, setShowSignup] = useState(false);
+
+  const handleSwitchToSignup = () => {
+    setShowSignup(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowSignup(false);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-between">
-      {/* Header */}
-      <HeaderNav />
-
-      {/* Content main */}
-      <div className="flex flex-col-reverse md:flex-row justify-between items-center px-8 py-12 flex-grow gap-10">
-        {/* Left side: Intro + Form */}
-        <div className="flex flex-col space-y-8 max-w-xl">
-          <IntroSection />
-          <LoginForm />
+    <>
+      <div className="homePage">
+        <HeaderNav />
+        <div className="grid grid-cols-2 grid-rows-2">
+          <div className="col-span-1 row-span-2">
+            <Introsection />
+            {showSignup ? (
+              <SignUpForm onBack={handleBackToLogin} />
+            ) : (
+              <LoginForm onSwitchToSignup={handleSwitchToSignup} />
+            )}
+          </div>
+          <div className="col-span-1 row-span-2">
+            <Illustration />
+          </div>
         </div>
-
-        {/* Right side: Illustration */}
-        <Illustration />
+        <Footer />
       </div>
-
-      {/* Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }

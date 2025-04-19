@@ -1,4 +1,4 @@
-export default function LoginForm() {
+export default function LoginForm({ onSwitchToSignup }) {
   return (
     <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
       <form className="space-y-4">
@@ -20,15 +20,19 @@ export default function LoginForm() {
           />
         </div>
 
-        {/* Checkbox + Quên mật khẩu */}
+        {/* Checkbox + Đăng ký */}
         <div className="flex justify-between items-center text-sm text-gray-600">
           <label className="flex items-center space-x-2">
             <input type="checkbox" className="accent-blue-500" />
             <span>Duy trì đăng nhập</span>
           </label>
-          <a href="#" className="text-blue-600 hover:underline">
-            Bạn quên mật khẩu?
-          </a>
+          <button
+            type="button"
+            onClick={onSwitchToSignup}
+            className="text-blue-600 hover:underline"
+          >
+            Đăng ký
+          </button>
         </div>
 
         {/* Đăng nhập button */}
@@ -39,6 +43,13 @@ export default function LoginForm() {
           Đăng nhập
         </button>
       </form>
+
+      {/* Quên mật khẩu */}
+      <div className="mt-4 text-center">
+        <a href="#" className="text-sm text-blue-600 hover:underline">
+          Bạn quên mật khẩu?
+        </a>
+      </div>
 
       {/* Tải xuống app */}
       <div className="mt-6 text-center text-gray-600 text-sm">
