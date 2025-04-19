@@ -1,7 +1,17 @@
-export default function LoginForm() {
+import { useNavigate } from "react-router-dom";
+
+export default function LoginForm({ onSwitchToSignup }) {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Thêm logic xác thực nếu cần (gọi API, kiểm tra input, v.v.)
+    navigate("/chat"); // Chuyển hướng đến trang chat
+  };
+
   return (
     <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleLogin}>
         {/* Email or Phone */}
         <div>
           <input
@@ -20,15 +30,19 @@ export default function LoginForm() {
           />
         </div>
 
-        {/* Checkbox + Quên mật khẩu */}
+        {/* Checkbox + Đăng ký */}
         <div className="flex justify-between items-center text-sm text-gray-600">
           <label className="flex items-center space-x-2">
             <input type="checkbox" className="accent-blue-500" />
             <span>Duy trì đăng nhập</span>
           </label>
-          <a href="#" className="text-blue-600 hover:underline">
-            Bạn quên mật khẩu?
-          </a>
+          <button
+            type="button"
+            onClick={onSwitchToSignup}
+            className="text-blue-600 hover:underline"
+          >
+            Đăng ký
+          </button>
         </div>
 
         {/* Đăng nhập button */}
@@ -40,22 +54,13 @@ export default function LoginForm() {
         </button>
       </form>
 
-      {/* Tải xuống app */}
-      <div className="mt-6 text-center text-gray-600 text-sm">
-        <p>Tải ứng dụng Connectee dành cho máy tính</p>
-        <div className="flex justify-center space-x-4 mt-4">
-          <img
-            src="/appstore.png"
-            alt="Tải xuống từ App Store"
-            className="h-10"
-          />
-          <img
-            src="/microsoftstore.png"
-            alt="Tải xuống từ Microsoft Store"
-            className="h-10"
-          />
-        </div>
+      {/* Quên mật khẩu */}
+      <div className="mt-4 text-center">
+        <a href="#" className="text-sm text-blue-600 hover:underline">
+          Bạn quên mật khẩu?
+        </a>
       </div>
+      
     </div>
   );
 }

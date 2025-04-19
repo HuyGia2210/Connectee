@@ -1,4 +1,5 @@
 // src/components/Footer.jsx
+import logo from "../../images/logo.png";
 
 export default function Footer() {
   return (
@@ -6,20 +7,24 @@ export default function Footer() {
       {/* Left side: copyright + links */}
       <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-1 md:space-y-0">
         <span>© Connectee 2025</span>
-        <a href="#" className="hover:underline">Chính sách quyền riêng tư</a>
-        <a href="#" className="hover:underline">Chính sách cookie</a>
-        <a href="#" className="hover:underline">Điều khoản</a>
-        <a href="#" className="hover:underline">Tiếng Việt ▾</a>
+        <a href="#" className="hover:underline">
+          Chính sách quyền riêng tư
+        </a>
+        <a href="#" className="hover:underline">
+          Chính sách cookie
+        </a>
+        <a href="#" className="hover:underline">
+          Điều khoản
+        </a>
+        <a href="#" className="hover:underline">
+          Tiếng Việt ▾
+        </a>
       </div>
 
       {/* Right side: Meta logo */}
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center space-x-2 rounded-full">
         <span>from</span>
-        <img
-          src="/meta-logo.svg"
-          alt="Connectee Logo"
-          className="h-5"
-        />
+        <img src={logo} alt="Messenger Logo" className="w-8 h-8 rounded-full" />
       </div>
     </footer>
   );
