@@ -1,7 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 export default function LoginForm({ onSwitchToSignup }) {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Thêm logic xác thực nếu cần (gọi API, kiểm tra input, v.v.)
+    navigate("/chat"); // Chuyển hướng đến trang chat
+  };
+
   return (
     <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleLogin}>
         {/* Email or Phone */}
         <div>
           <input
