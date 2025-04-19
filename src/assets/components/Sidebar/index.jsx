@@ -1,5 +1,5 @@
 // src/assets/components/Sidebar/index.jsx
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/assets/components/ui/scroll-area";
 
 const conversations = [
   { name: "Chatgram", message: "Web was updated.", time: "19:48", unread: 1, type: "group" },

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FeatureDropdown from "../FeatureDropdown";
+import logo from "../../images/logo.png"
 
 export default function HeaderNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +12,11 @@ export default function HeaderNav() {
   return (
     <header className="relative z-50 bg-white shadow-sm px-8 py-4 flex items-center justify-between">
       {/* Logo */}
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 rounded-full">
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/8/83/Facebook_Messenger_4_Logo.svg"
+          src={logo}
           alt="Messenger Logo"
-          className="w-8 h-8"
+          className="w-8 h-8 rounded-full"
         />
       </div>
 

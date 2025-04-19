@@ -60,23 +60,7 @@ export default function LoginForm({ onSwitchToSignup }) {
           Bạn quên mật khẩu?
         </a>
       </div>
-
-      {/* Tải xuống app */}
-      <div className="mt-6 text-center text-gray-600 text-sm">
-        <p>Tải ứng dụng Connectee dành cho máy tính</p>
-        <div className="flex justify-center space-x-4 mt-4">
-          <img
-            src="/appstore.png"
-            alt="Tải xuống từ App Store"
-            className="h-10"
-          />
-          <img
-            src="/microsoftstore.png"
-            alt="Tải xuống từ Microsoft Store"
-            className="h-10"
-          />
-        </div>
-      </div>
+      
     </div>
   );
 }
