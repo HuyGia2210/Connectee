@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FeatureDropdown from "../FeatureDropdown";
-import logo from "../../images/logo.png"
+import logo from "../../../images/logo.png"
 
 export default function HeaderNav() {
   const [isOpen, setIsOpen] = useState(false);

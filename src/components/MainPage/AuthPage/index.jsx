@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Footer from "../Footer";
 import LoginForm from "../LoginForm";
-import HeaderNav from "./../HeaderNav/index";
-import Illustration from "./../Illustration/index";
-import Introsection from "./../IntroSection/index";
-import "../../../App.css";
+import HeaderNav from "../HeaderNav/index";
+import Illustration from "../Illustration/index";
+import Introsection from "../IntroSection/index";
+import "../../../../src/App.css";
 import SignUpForm from "../SignUpForm";
 
 export default function AuthPage() {
