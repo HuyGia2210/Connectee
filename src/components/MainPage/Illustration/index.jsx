@@ -1,5 +1,5 @@
 // src/components/Illustration.jsx
-import messageSample from "../../images/tinnhan.png"
+import messageSample from "../../../images/tinnhan.png"
 
 export default function Illustration() {
   return (

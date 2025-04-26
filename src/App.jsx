@@ -1,32 +1,54 @@
-import { Routes, Route } from "react-router-dom";
-import ChatPage from "./assets/components/ChatPage";
-import AuthPage from "./assets/components/AuthPage";
-import ProtectedRoute from "./assets/components/ProtectedRoute";
-import PublicRoute from "./assets/components/PublicRoute";
+// src/App.jsx
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
+import PublicRoute from "./components/MainPage/PublicRoute";
+import ProtectedRoute from "./components/MainPage/ProtectedRoute";
+import ChatPage from "./components/Chat/ChatPage";
+import AuthPage from "./components/MainPage/AuthPage";
+import AdminPage from "./components/Admin/AdminPage"; // Thêm AdminPage
+import ErrorPage from "./components/ErrorPage"; // Thêm ErrorPage
 
 export default function App() {
-  return (
-    <Routes>
-      {/* Đường dẫn public */}
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <AuthPage />
-          </PublicRoute>
-        }
-      />
+  const location = useLocation();
+  const isFullScreen = location.pathname === "/chat" || location.pathname === "/admin";
 
-      {/* Đường dẫn private */}
-      <Route
-        path="/chat"
-        element={
-          <ProtectedRoute>
-            <ChatPage />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+  return (
+    <div id="root" className={isFullScreen ? "full-screen" : ""}>
+      <Routes>
+        {/* Đường dẫn public */}
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <AuthPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* Đường dẫn private */}
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Đường dẫn private cho admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Đường dẫn lỗi */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </div>
   );
 }
+

@@ -1,12 +1,19 @@
+// src/assets/components/LoginForm/index.jsx
 import { useNavigate } from "react-router-dom";
+import { useState } from "react"; // Thêm useState để quản lý trạng thái checkbox
 
 export default function LoginForm({ onSwitchToSignup }) {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false); // State để theo dõi checkbox
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Thêm logic xác thực nếu cần (gọi API, kiểm tra input, v.v.)
-    navigate("/chat"); // Chuyển hướng đến trang chat
+    if (isAdmin) {
+      navigate("/admin"); // Chuyển hướng đến trang quản lý nếu checkbox được tích
+    } else {
+      navigate("/chat"); // Chuyển hướng đến trang chat nếu không tích
+    }
   };
 
   return (
@@ -33,8 +40,13 @@ export default function LoginForm({ onSwitchToSignup }) {
         {/* Checkbox + Đăng ký */}
         <div className="flex justify-between items-center text-sm text-gray-600">
           <label className="flex items-center space-x-2">
-            <input type="checkbox" className="accent-blue-500" />
-            <span>Duy trì đăng nhập</span>
+            <input
+              type="checkbox"
+              className="accent-blue-500"
+              checked={isAdmin}
+              onChange={(e) => setIsAdmin(e.target.checked)} // Cập nhật state khi checkbox thay đổi
+            />
+            <span>Đăng nhập với tư cách quản lý</span>
           </label>
           <button
             type="button"

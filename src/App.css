@@ -1,12 +1,31 @@
+
+/* src/app.css */
+@import "tailwindcss";
+@import "tw-animate-css";
+
 @custom-variant dark (&:is(.dark *));
 
+/* Style mặc định cho #root (dành cho trang cần căn giữa như AuthPage) */
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Style cho các trang full màn hình (ChatPage, AdminPage) */
+#root.full-screen {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: block;
+}
+
+/* Các style khác giữ nguyên */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -80,6 +99,7 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
 }
 
+/* Các style khác giữ nguyên */
 .dark {
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
