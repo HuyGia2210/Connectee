@@ -17,7 +17,7 @@ export default function LoginForm({ onSwitchToSignup }) {
           <input
             type="text"
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Nhập email hoặc số điện thoại"
+            placeholder="Nhập tên đăng nhập"
           />
         </div>
 

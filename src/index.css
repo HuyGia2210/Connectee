@@ -1,4 +1,6 @@
 @import "remixicon/fonts/remixicon.css";
+@import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
