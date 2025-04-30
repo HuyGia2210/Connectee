@@ -14,7 +14,6 @@ export default function ChatHeader() {
       </div>
       <div className="flex items-center space-x-4 text-gray-600">
         <i className="ri-search-line text-xl hover:text-blue-600 cursor-pointer"></i>
-        <i className="ri-phone-line text-xl hover:text-blue-600 cursor-pointer"></i>
         <i className="ri-more-2-fill text-xl hover:text-blue-600 cursor-pointer"></i>
       </div>
     </div>
