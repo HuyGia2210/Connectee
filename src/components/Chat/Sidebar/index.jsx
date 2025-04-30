@@ -1,75 +1,258 @@
-// src/assets/components/Sidebar/index.jsx
-import { ScrollArea } from "@/components/MainPage/ui/scroll-area";
+import { useEffect, useState } from "react";
 
-const conversations = [
-  { name: "Chatgram", message: "Web was updated.", time: "19:48", unread: 1, type: "group" },
-  { name: "Jessica Drew", message: "Ok, see you later", time: "18:30", unread: 2, type: "personal" },
-  { name: "David Moore", message: "You: I don't remember anything 😅", time: "18:16", type: "personal" },
-  { name: "Greg James", message: "I got a job at SpaceX 🚀", time: "18:02", type: "personal" },
-  { name: "Emily Dorson", message: "Table for four, 5PM. Be there.", time: "17:42", type: "personal" },
-  { name: "Office Chat", message: "Lewis: All done mate 😅", time: "17:08", type: "group" },
-  { name: "Announcements", message: "Channel created", time: "16:15", unread: 1, type: "announcement" },
-  { name: "Little Sister", message: "Tell mom I will be home for tea 💜", time: "Wed", type: "personal" },
-  { name: "Art Class", message: "Emily: 🎨", time: "Tue", type: "group" },
-];
+export default function Sidebar({ onSelectFriend, selectedFriend }) {
+  const [friends, setFriends] = useState([]);
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [loadingFriends, setLoadingFriends] = useState(true);
+  const [loadingRequests, setLoadingRequests] = useState(true);
 
-export default function Sidebar() {
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+
+  useEffect(() => {
+    fetchFriends();
+    fetchFriendRequests();
+  }, []);
+
+  const fetchFriends = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/user/friend-list", {
+        credentials: "include",
+      });
+      setFriends(res.ok ? await res.json() : []);
+    } catch {
+      setFriends([]);
+    } finally {
+      setLoadingFriends(false);
+    }
+  };
+
+  const fetchFriendRequests = async () => {
+    try {
+      const res = await fetch("/api/user/get-friend-request", {
+        credentials: "include",
+      });
+      setFriendRequests(res.ok ? await res.json() : []);
+    } catch {
+      setFriendRequests([]);
+    } finally {
+      setLoadingRequests(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchInput.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      fetchSearch();
+    }, 300); // debounce 300ms
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const fetchSearch = async () => {
+    setSearchLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/user/find-friend?input=${encodeURIComponent(
+          searchInput
+        )}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setSearchResults(data);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Lỗi tìm kiếm bạn bè:", error);
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const sendFriendRequest = async (nickName) => {
+    try {
+      console.log(nickName);
+
+      const res = await fetch(
+        `http://localhost:8080/api/user/send-friend-request?nickname=${encodeURIComponent(
+          nickName
+        )}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+
+      if (res.ok) {
+        alert(`Đã gửi lời mời kết bạn tới @${nickName}`);
+      } else {
+        console.error(res.status);
+        alert("Gửi lời mời thất bại");
+      }
+    } catch (error) {
+      console.error("Lỗi gửi lời mời:", error);
+    }
+  };
+
+  const acceptFriendRequest = async (nickName) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/user/accept-friend-request?nickname=${encodeURIComponent(
+          nickName
+        )}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (res.ok) {
+        alert(`Đã chấp nhận @${nickName}`);
+        fetchFriends(); // reload lại danh sách bạn bè
+        fetchFriendRequests(); // reload lại danh sách lời mời
+      } else {
+        alert("Chấp nhận thất bại");
+      }
+    } catch (error) {
+      console.error("Lỗi chấp nhận kết bạn:", error);
+    }
+  };
+
   return (
-    <div className="w-[320px] bg-white flex flex-col border-r border-gray-300">
-      {/* Header với tiêu đề, icon menu và thanh tìm kiếm */}
+    <div className="w-[320px] bg-white flex flex-col border-r border-gray-300 h-screen">
+      {/* Header & Search */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
-          <div className="font-semibold text-lg">Conntectee</div>
-          <i className="ri-menu-line text-xl text-gray-600 hover:text-blue-600 cursor-pointer"></i>
+          <div className="font-semibold text-lg">Connectee</div>
+          <i className="ri-menu-line text-xl text-gray-600 hover:text-blue-600 cursor-pointer" />
         </div>
         <div className="relative">
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Tìm kiếm bạn bè"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+          <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          {searchInput.trim() !== "" && (
+            <div className="absolute w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto z-10">
+              {searchLoading ? (
+                <div className="p-4 text-gray-500">Đang tìm kiếm...</div>
+              ) : searchResults.length === 0 ? (
+                <div className="p-4 text-gray-500">
+                  Không tìm thấy bạn bè nào.
+                </div>
+              ) : (
+                searchResults.map((u) => (
+                  <div
+                    key={u.nickname}
+                    className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer border-b"
+                    onClick={() => onSelectFriend(u)}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold">
+                      {getLastWordFirstChar(u.fullName)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">{u.fullName}</div>
+                      <div className="text-sm text-gray-500">@{u.nickname}</div>
+                    </div>
+                    <button
+                      className="text-sm text-green-500 hover:underline ml-2"
+                      onClick={() => sendFriendRequest(u.nickname)}
+                    >
+                      Kết bạn
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Danh sách cuộc trò chuyện */}
-      <ScrollArea className="flex-1">
-        <ul>
-          {conversations.map((conv, idx) => (
-            <li
-              key={idx}
-              className="flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer border-b"
+      {/* Bạn bè */}
+      <div className="flex-1 overflow-y-auto border-b border-gray-200">
+        <div className="p-2 font-semibold">Bạn bè</div>
+        {loadingFriends ? (
+          <div className="p-4 text-gray-500">Đang tải danh sách...</div>
+        ) : friends.length === 0 ? (
+          <div className="p-4 text-gray-500">Bạn chưa có bạn bè nào.</div>
+        ) : (
+          friends.map((f) => (
+            <div
+              key={f.nickname}
+              onClick={() => onSelectFriend(f)}
+              className={`flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer border-b last:border-none ${
+                selectedFriend?.nickname === f.nickname ? "bg-blue-50" : ""
+              }`}
             >
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                {conv.type === "announcement" ? (
-                  <span className="text-green-500 font-bold">A</span>
-                ) : conv.type === "group" ? (
-                  <span className="text-gray-500">👥</span>
-                ) : (
-                  <span className="text-gray-500">👤</span>
-                )}
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold">
+                {getLastWordFirstChar(f.fullName)}
               </div>
-
-              {/* Nội dung */}
               <div className="flex-1">
-                <div className="flex justify-between">
-                  <div className="font-medium">{conv.name}</div>
-                  <div className="text-sm text-gray-500">{conv.time}</div>
+                <div className="font-medium">{f.fullName}</div>
+                <div className="text-sm text-gray-500 truncate">
+                  @{f.nickname}
                 </div>
-                <div className="text-sm text-gray-500 truncate">{conv.message}</div>
               </div>
+            </div>
+          ))
+        )}
+      </div>
 
-              {/* Thông báo chưa đọc */}
-              {conv.unread && (
-                <div className="ml-2 w-5 h-5 rounded-full bg-green-500 text-white text-xs flex items-center justify-center">
-                  {conv.unread}
+      {/* Lời mời kết bạn */}
+      <div className="h-64 overflow-y-auto">
+        <div className="p-2 font-semibold">Lời mời kết bạn</div>
+        {loadingRequests ? (
+          <div className="p-4 text-gray-500">Đang tải lời mời...</div>
+        ) : friendRequests.length === 0 ? (
+          <div className="p-4 text-gray-500">Không có lời mời nào.</div>
+        ) : (
+          friendRequests.map((r) => (
+            <div
+              key={r.nickname}
+              className="flex items-center px-4 py-3 hover:bg-gray-100 border-b last:border-none"
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold">
+                {getLastWordFirstChar(r.fullName)}
+              </div>
+              <div className="flex-1">
+                <div className="font-medium">{r.fullName}</div>
+                <div className="text-sm text-gray-500 truncate">
+                  @{r.nickname}
                 </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </ScrollArea>
+              </div>
+              <button
+                className="text-sm text-green-500 hover:underline ml-2"
+                onClick={() => acceptFriendRequest(r.nickname)}
+              >
+                Chấp nhận
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
+}
+
+// Hàm lấy ký tự đầu của từ cuối cùng trong fullName
+function getLastWordFirstChar(fullName) {
+  if (!fullName) return "?";
+  const words = fullName.trim().split(" ");
+  return words[words.length - 1].charAt(0).toUpperCase();
 }

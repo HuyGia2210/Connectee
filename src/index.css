@@ -16,6 +16,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  width: 100%;
 }
 
 a {
@@ -31,7 +33,7 @@ body {
   margin: 0;
 
   min-width: 320px;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   /* Bỏ display: flex và place-items: center */
 }
 

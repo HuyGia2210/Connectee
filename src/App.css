@@ -8,10 +8,10 @@
 /* Style mặc định cho #root (dành cho trang cần căn giữa như AuthPage) */
 #root {
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
-  min-height: 100vh;
-  display: flex;
+  /* min-height: 100vh; */
+  display: flow-root;
   justify-content: center;
   align-items: center;
 }
