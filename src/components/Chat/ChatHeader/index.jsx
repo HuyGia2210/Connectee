@@ -1,20 +1,31 @@
-// src/assets/components/ChatHeader/index.jsx
-export default function ChatHeader() {
-  return (
-    <div className="px-6 py-3 border-b border-gray-300 bg-white flex items-center justify-between">
-      <div className="flex items-center space-x-3">
-        {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <span className="text-gray-500">👤</span>
-        </div>
-        <div>
-          <div className="font-semibold">David Moore</div>
-          <div className="text-sm text-gray-500">last seen 5 mins ago</div>
-        </div>
+export default function ChatHeader({ friend }) {
+  if (!friend) {
+    return (
+      <div className="px-4 py-2 border-b bg-white dark:bg-gray-800">
+        <p className="text-gray-500 dark:text-gray-400">Select a friend to start chatting</p>
       </div>
-      <div className="flex items-center space-x-4 text-gray-600">
-        <i className="ri-search-line text-xl hover:text-blue-600 cursor-pointer"></i>
-        <i className="ri-more-2-fill text-xl hover:text-blue-600 cursor-pointer"></i>
+    );
+  }
+
+  // Lấy chữ cái đầu của từ cuối cùng trong nickname
+  const getAvatarLetter = (nickname) => {
+    if (!nickname) return "?";
+    const parts = nickname.trim().split(" ");
+    return parts[parts.length - 1][0]?.toUpperCase() || "?";
+  };
+
+  return (
+    <div className="px-4 py-2 border-b bg-white dark:bg-gray-800 flex items-center space-x-4">
+      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+        {getAvatarLetter(friend.fullName)}
+      </div>
+      <div>
+        <div className="font-semibold text-gray-800 dark:text-white">
+          {friend.fullName}
+        </div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          last seen 5 mins ago
+        </div>
       </div>
     </div>
   );
