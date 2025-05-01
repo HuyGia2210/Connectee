@@ -59,10 +59,15 @@ export default function ChatPage() {
             console.error("Failed to fetch nickname", error);
           }
 
-          console.log("MSG luc sau:", msg);
+          const newMsg = {
+            ...msg,
+            timestamp: Date.now(),
+          };
+
+          console.log("MSG luc sau:", newMsg);
 
           // thêm vào danh sách messages chung (không filter)
-          setMessages((prev) => [...prev, msg]);
+          setMessages((prev) => [...prev, newMsg]);
         });
       },
       onStompError: (err) => console.error("STOMP error:", err),
@@ -109,15 +114,10 @@ export default function ChatPage() {
       {
         sender: myNick.current,
         receiver: selectedFriend.nickname,
+        timestamp: Date.now(),
         content,
       },
     ]);
-
-    console.log("Object send:", {
-      sender: myNick.current,
-      receiver: selectedFriend.nickname,
-      content,
-    });
 
     stompRef.current?.publish({
       destination: "/app/chat.private",
