@@ -132,7 +132,7 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
   };
 
   return (
-    <div className="w-[320px] bg-white flex flex-col border-r border-gray-300 h-screen">
+    <div className=" w-md bg-white flex flex-col border-r border-gray-300 h-screen">
       {/* Header & Search */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
@@ -196,11 +196,11 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
             <div
               key={f.nickname}
               onClick={() => onSelectFriend(f)}
-              className={`flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer border-b last:border-none ${
-                selectedFriend?.nickname === f.nickname ? "bg-blue-50" : ""
+              className={`flex items-center px-4 py-3 rounded-xl hover:bg-blue-50 cursor-pointer border-b last:border-none ${
+                selectedFriend?.nickname === f.nickname ? "bg-blue-100" : ""
               }`}
             >
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold">
+              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3 text-blue-600 font-bold">
                 {getLastWordFirstChar(f.fullName)}
               </div>
               <div className="flex-1">
