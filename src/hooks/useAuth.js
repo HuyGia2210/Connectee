@@ -9,8 +9,12 @@ export default function useAuth() {
         const res = await fetch("http://localhost:8080/api/user/auth/check", {
           credentials: "include", // gửi cookie
         });
-        setIsAuth(res.ok);
-        console.log(res.status)
+        
+        if(res.ok){
+          setIsAuth(res.ok);
+          console.log(res.status)
+        }
+        
       } catch(e) {
         setIsAuth(false);
         console.log(e);
