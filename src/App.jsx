@@ -13,11 +13,11 @@ export default function App() {
   const location = useLocation();
   const isFullScreen = location.pathname === "/chat" || location.pathname === "/admin";
 
-  const [lang, setLang] = useState("vn");
+  // const [lang, setLang] = useState("vn");
 
-  const toggleLanguage = () => {
-    setLang((prevLang) => (prevLang === "VN" ? "EN" : "VN"));
-  };
+  // const toggleLanguage = () => {
+  //   setLang((prevLang) => (prevLang === "VN" ? "EN" : "VN"));
+  // };
 
   return (
     <div id="root" className={isFullScreen ? "full-screen" : ""}>

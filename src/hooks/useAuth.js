@@ -10,10 +10,8 @@ export default function useAuth() {
           credentials: "include", // gửi cookie
         });
         
-        if(res.ok){
-          setIsAuth(res.ok);
-          console.log(res.status)
-        }
+        setIsAuth(res.ok);
+        console.log(res.status)
         
       } catch(e) {
         setIsAuth(false);
