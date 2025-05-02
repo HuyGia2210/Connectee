@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Thêm useNavigate
 
 export default function Sidebar({ onSelectFriend, selectedFriend }) {
   const [friends, setFriends] = useState([]);
@@ -15,6 +16,7 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
     nickname: 'embeddedAIByConnectee',
     isAI: true
   };
+  const navigate = useNavigate(); // Thêm useNavigate
 
 
   useEffect(() => {
@@ -142,6 +144,7 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
   };
 
 
+
   // Lấy chữ cái đầu của từ cuối cùng trong nickname
   const getAvatarLetter = (nickname) => {
     if (!nickname) return "?";
@@ -160,13 +163,22 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
     return nickname
   }
 
+
+  const handleMenuClick = () => {
+    navigate("/settings"); // Chuyển hướng đến trang cài đặt
+  };
+
+
   return (
-    <div className=" w-md bg-white flex flex-col border-r border-gray-300 h-screen">
+    <div className="w-md bg-white flex flex-col border-r border-gray-300 h-screen">
       {/* Header & Search */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="font-semibold text-lg">Connectee</div>
-          <i className="ri-menu-line text-xl text-gray-600 hover:text-blue-600 cursor-pointer" />
+          <i
+            className="ri-menu-line text-xl text-gray-600 hover:text-blue-600 cursor-pointer"
+            onClick={handleMenuClick} // Thêm sự kiện onClick
+          />
         </div>
         <div className="relative">
           <input
