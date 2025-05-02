@@ -11,19 +11,28 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
+  const AI_USER = {
+    fullName: 'embeddedAIByConnectee',
+    nickname: 'embeddedAIByConnectee',
+    isAI: true
+  };
   const navigate = useNavigate(); // Thêm useNavigate
+
 
   useEffect(() => {
     fetchFriends();
     fetchFriendRequests();
   }, []);
 
+
   const fetchFriends = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/user/friend-list", {
         credentials: "include",
       });
-      setFriends(res.ok ? await res.json() : []);
+      const apiFriends = res.ok ? await res.json() : [];
+    // Gộp AI_USER vào đầu danh sách
+    setFriends([AI_USER, ...apiFriends]);
     } catch {
       setFriends([]);
     } finally {
@@ -33,7 +42,7 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
 
   const fetchFriendRequests = async () => {
     try {
-      const res = await fetch("/api/user/get-friend-request", {
+      const res = await fetch("http://localhost:8080/api/user/get-friend-request", {
         credentials: "include",
       });
       setFriendRequests(res.ok ? await res.json() : []);
@@ -134,9 +143,31 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
     }
   };
 
+
+
+  // Lấy chữ cái đầu của từ cuối cùng trong nickname
+  const getAvatarLetter = (nickname) => {
+    if (!nickname) return "?";
+    if(nickname === "embeddedAIByConnectee") return "AI";
+    const parts = nickname.trim().split(" ");
+    return parts[parts.length - 1][0]?.toUpperCase() || "?";
+  };
+
+  const getFullName = (fullName) => {
+    if(fullName === "embeddedAIByConnectee") return "Gemini"
+    return fullName
+  }
+
+  const getNickame = (nickname) => {
+    if(nickname === "embeddedAIByConnectee") return "Gemini"
+    return nickname
+  }
+
+
   const handleMenuClick = () => {
     navigate("/settings"); // Chuyển hướng đến trang cài đặt
   };
+
 
   return (
     <div className="w-md bg-white flex flex-col border-r border-gray-300 h-screen">
@@ -171,7 +202,7 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
                   <div
                     key={u.nickname}
                     className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer border-b"
-                    onClick={() => onSelectFriend(u)}
+                    // onClick={() => onSelectFriend(u)}
                   >
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold">
                       {getLastWordFirstChar(u.fullName)}
@@ -211,12 +242,12 @@ export default function Sidebar({ onSelectFriend, selectedFriend }) {
               }`}
             >
               <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3 text-blue-600 font-bold">
-                {getLastWordFirstChar(f.fullName)}
+                {getAvatarLetter(f.fullName)}
               </div>
               <div className="flex-1">
-                <div className="font-medium">{f.fullName}</div>
+                <div className="font-medium">{getFullName(f.fullName)}</div>
                 <div className="text-sm text-gray-500 truncate">
-                  @{f.nickname}
+                  @{getNickame(f.nickname)}
                 </div>
               </div>
             </div>
