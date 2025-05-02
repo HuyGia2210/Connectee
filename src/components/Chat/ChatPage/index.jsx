@@ -10,6 +10,8 @@ import axios from "axios"; // Dùng axios để gọi API
 export default function ChatPage() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [aiChatMess, setAiChatMess] = useState([]);
+  const [loading, setLoading] = useState(false);
   const stompRef = useRef(null);
   const myNick = useRef(localStorage.getItem("nickname"));
 
@@ -85,44 +87,74 @@ export default function ChatPage() {
     if (!selectedFriend) return;
 
     let receiverUsername = "";
+    let result = "";
 
-    try {
-      // Gọi API để lấy nickname từ username của sender
-      const res = await axios.get(
-        "http://localhost:8080/api/user/get-username-by-nickname?nickname=" +
-          selectedFriend.nickname
-      );
+    if(selectedFriend.nickname === "embeddedAIByConnectee" && selectedFriend.nickname === "embeddedAIByConnectee"){
+      try{
+        setLoading(true)
+        const res = await axios.get(
+          "http://localhost:8080/api/ai/generate?prompt=" + encodeURIComponent(content),
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status === 200) {
+          result = res.data;
+        }
 
-      if (res.status === 200) {
-        // Thay sender bằng nickname đã lấy được
-        receiverUsername = res.data;
+        let resultObj = {
+          nickname: myNick,
+          prompt: content,
+          result: result,
+          timestamp: Date.now(),
+        }
+        console.log(result)
+        setAiChatMess((prev)=>[...prev, resultObj])
+        setLoading(false)
+      }catch (error) {
+        console.error("Failed to send ai prompt", error);
       }
-    } catch (error) {
-      console.error("Failed to fetch nickname", error);
+    }else{
+      try {
+        // Gọi API để lấy nickname từ username của sender
+        const res = await axios.get(
+          "http://localhost:8080/api/user/get-username-by-nickname?nickname=" +
+            selectedFriend.nickname
+        );
+  
+        if (res.status === 200) {
+          // Thay sender bằng nickname đã lấy được
+          receiverUsername = res.data;
+        }
+      } catch (error) {
+        console.error("Failed to fetch nickname", error);
+      }
+  
+      const chatMessage = {
+        receiver: receiverUsername,
+        content,
+      };
+  
+      console.log("ChatMess: ", chatMessage);
+  
+      // Echo ngay cho UI
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: myNick.current,
+          receiver: selectedFriend.nickname,
+          timestamp: Date.now(),
+          content,
+        },
+      ]);
+  
+      stompRef.current?.publish({
+        destination: "/app/chat.private",
+        body: JSON.stringify(chatMessage),
+      });
     }
 
-    const chatMessage = {
-      receiver: receiverUsername,
-      content,
-    };
-
-    console.log("ChatMess: ", chatMessage);
-
-    // Echo ngay cho UI
-    setMessages((prev) => [
-      ...prev,
-      {
-        sender: myNick.current,
-        receiver: selectedFriend.nickname,
-        timestamp: Date.now(),
-        content,
-      },
-    ]);
-
-    stompRef.current?.publish({
-      destination: "/app/chat.private",
-      body: JSON.stringify(chatMessage),
-    });
+    
   };
 
   return (
@@ -133,8 +165,8 @@ export default function ChatPage() {
         />
         <div id="chatArea" className="flex-1 flex flex-col">
           <ChatHeader friend={selectedFriend} />
-          <ChatBody friend={selectedFriend} messages={messages} />
-          <MessageInput friend={selectedFriend} onSendMessage={handleSend} />
+          <ChatBody friend={selectedFriend} messages={messages} aiMess={aiChatMess} onAiMess={setAiChatMess} loading={loading} setLoading={setLoading}/>
+          <MessageInput friend={selectedFriend} onSendMessage={handleSend} loading={loading} setLoading={setLoading}/>
         </div>
     </div>
   );
