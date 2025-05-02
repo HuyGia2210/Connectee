@@ -1,17 +1,17 @@
-// src/App.jsx
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import PublicRoute from "./components/MainPage/PublicRoute";
 import ProtectedRoute from "./components/MainPage/ProtectedRoute";
 import ChatPage from "./components/Chat/ChatPage";
 import AuthPage from "./components/MainPage/AuthPage";
-import AdminPage from "./components/Admin/AdminPage"; // Thêm AdminPage
-import ErrorPage from "./components/ErrorPage"; // Thêm ErrorPage
+import AdminPage from "./components/Admin/AdminPage";
+import ErrorPage from "./components/ErrorPage";
+import SettingsPage from "./components/Settings/SettingsPage"; // Thêm SettingsPage
 import { useState } from "react";
 
 export default function App() {
   const location = useLocation();
-  const isFullScreen = location.pathname === "/chat" || location.pathname === "/admin";
+  const isFullScreen = location.pathname === "/chat" || location.pathname === "/admin" || location.pathname === "/settings";
 
   const [lang, setLang] = useState("vn");
 
@@ -52,10 +52,19 @@ export default function App() {
           }
         />
 
+        {/* Đường dẫn private cho settings */}
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Đường dẫn lỗi */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>
   );
 }
-
