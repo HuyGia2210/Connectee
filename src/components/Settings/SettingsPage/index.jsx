@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Sidebar from '../Sidebar'; // Import Sidebar từ thư mục components
+import Sidebar from '../SecondSideBar'; // Import Sidebar từ thư mục components
 import MainContent from '../MainContent';
 
 function SettingsPage() {
