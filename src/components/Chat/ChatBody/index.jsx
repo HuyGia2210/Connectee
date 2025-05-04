@@ -3,10 +3,19 @@ import axios from "axios";
 import { format, isToday } from "date-fns";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import "./ChatBody.css"
+import "./ChatBody.css";
+import locales from "@/language/locales";
 
-
-export default function ChatBody({ friend, messages, aiMess, onAiMess, loading, setLoading }) {
+export default function ChatBody({
+  friend,
+  messages,
+  aiMess,
+  onAiMess,
+  loading,
+  setLoading,
+  lang,
+  scrMode,
+}) {
   const [myNick, setMyNick] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [aiChatMess, setAIChatMess] = useState([]);
@@ -26,7 +35,6 @@ export default function ChatBody({ friend, messages, aiMess, onAiMess, loading, 
         friend.nickname === "embeddedAIByConnectee" &&
         friend.fullName === "embeddedAIByConnectee"
       ) {
-        let result = {};
         try {
           const res = await axios.get(
             "http://localhost:8080/api/ai/get-history",
@@ -34,10 +42,6 @@ export default function ChatBody({ friend, messages, aiMess, onAiMess, loading, 
               withCredentials: true,
             }
           );
-          if (res.status === 200) {
-            result = res.data;
-          }
-          console.log(result);
           onAiMess(res.data);
         } catch (error) {
           console.error("Failed to get AI chat history", error);
@@ -106,142 +110,183 @@ export default function ChatBody({ friend, messages, aiMess, onAiMess, loading, 
 
   if (!friend) {
     return (
-      <div className="flex-1 flex items-center justify-center text-gray-400">
-        Hãy chọn một người bạn để bắt đầu trò chuyện.
+      <div
+        className="flex-1 flex items-center justify-center"
+        style={{
+          backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827", // gray-50 / gray-900
+          color: scrMode === "light" ? "#374151" : "#ffffff", // gray-700 / white
+        }}
+      >
+        {locales[lang].chooseFriend}
       </div>
     );
   }
+  
 
   return (
     <div
       ref={chatContainerRef}
-      className="flex-1 overflow-y-auto bg-cover p-6 space-y-4"
-      style={{ maxHeight: "calc(100vh - 150px)" }}
+      className="flex-1 overflow-y-auto p-6 space-y-4"
+      style={{
+        maxHeight: "calc(100vh - 150px)",
+        backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827", // gray-50 / gray-900
+      }}
     >
       {loading && !isEmbeddedAI ? (
-        <div className="text-center text-gray-500">Đang lấy tin nhắn...</div>
+        <div className="justify-center" style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}>
+          {locales[lang].fetchMessage}
+        </div>
       ) : (
         <>
-          {friend.nickname === "embeddedAIByConnectee" &&
-          friend.fullName === "embeddedAIByConnectee" ? (
-            aiMess.length === 0 ? (
-              <div className="text-center text-gray-500">Không có tin nhắn</div>
-            ) : (
-              aiMess.map((msg, idx) => (
-                <div key={`ai-${idx}`}>
-                  {/* Prompt của người dùng (hiện bên phải) */}
-                  <div className="flex justify-end mb-2">
-                    <div className="max-w-[70%] p-3 shadow text-sm bg-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl">
-                      <div className="text-sm">{msg.prompt}</div>
-                      <div className="flex justify-end text-xs mt-1 text-gray-400">
-                        <span>{formatTimestamp(msg.timestamp)}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Câu trả lời của AI (hiện bên trái) */}
-                  <div className="flex justify-start mb-4">
-                    <div className="max-w-[70%] p-3 shadow text-sm bg-white rounded-tr-xl rounded-br-xl rounded-tl-xl">
-                      <div className="font-semibold text-xs text-gray-600 mb-1">
-                        @Gemini
-                      </div>
-                      <div className="whitespace-pre-line">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.result}</ReactMarkdown>
-                      </div>
-
-                      <div className="flex justify-end text-xs mt-1 text-gray-400">
-                        <span>{formatTimestamp(msg.timestamp)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )
-          ) : (
-            <>
-              {chatMessages.length === 0 && messages.length === 0 ? (
-                <div className="text-center text-gray-500">
-                  Không có tin nhắn
+          {friend ? (
+            friend.nickname === "embeddedAIByConnectee" &&
+            friend.fullName === "embeddedAIByConnectee" ? (
+              aiMess.length === 0 ? (
+                <div
+                  className="justify-center"
+                  style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
+                >
+                  {locales[lang].messageNotAvailable}
                 </div>
               ) : (
-                <>
-                  {chatMessages
-                    .filter(
-                      (msg) =>
-                        (msg.sender === myNick &&
-                          msg.receiver === friend.nickname) ||
-                        (msg.sender === friend.nickname &&
-                          msg.receiver === myNick)
-                    )
-                    .map((msg, idx) => (
+                aiMess.map((msg, idx) => (
+                  <div key={`ai-${idx}`}>
+                    {/* Prompt (user) */}
+                    <div className="flex justify-end mb-2">
                       <div
-                        key={`history-${idx}`}
-                        className={`flex ${
-                          isMyMessage(msg) ? "justify-end" : "justify-start"
-                        }`}
+                        className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                        style={{
+                          backgroundColor:
+                            scrMode === "light" ? "#d1fae5" : "#065f46", // green-100 / green-800
+                          color: scrMode === "light" ? "#000" : "#fff",
+                        }}
                       >
+                        <div>{msg.prompt}</div>
                         <div
-                          className={`max-w-[70%] p-3 shadow text-sm ${
-                            isMyMessage(msg)
-                              ? "bg-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl"
-                              : "bg-white rounded-tr-xl rounded-br-xl rounded-tl-xl"
-                          }`}
+                          className="flex justify-end text-xs mt-1"
+                          style={{
+                            color: scrMode === "light" ? "#9ca3af" : "#d1d5db", // gray-400 / gray-300
+                          }}
                         >
-                          {!isMyMessage(msg) && (
-                            <div className="font-semibold text-xs text-gray-600 mb-1">
-                              @{msg.sender}
-                            </div>
-                          )}
-                          <div className="whitespace-pre-line">{msg.content}</div>
-                          <div className="flex justify-end space-x-1 text-xs mt-1 text-gray-400">
-                            <span id="time">
-                              {formatTimestamp(msg.timestamp)}
-                            </span>
-                          </div>
+                          <span>{formatTimestamp(msg.timestamp)}</span>
                         </div>
                       </div>
-                    ))}
-
-                  {messages
-                    .filter(
-                      (msg) =>
-                        (msg.sender === myNick &&
-                          msg.receiver === friend.nickname) ||
-                        (msg.sender === friend.nickname &&
-                          msg.receiver === myNick)
-                    )
-                    .map((msg, idx) => (
+                    </div>
+  
+                    {/* Response (AI) */}
+                    <div className="flex justify-start mb-4">
                       <div
-                        key={`new-${idx}`}
-                        className={`flex ${
-                          isMyMessage(msg) ? "justify-end" : "justify-start"
-                        }`}
+                        className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                        style={{
+                          backgroundColor:
+                            scrMode === "light" ? "#fff" : "#1f2937", // white / gray-800
+                          color: scrMode === "light" ? "#000" : "#fff",
+                        }}
                       >
                         <div
-                          className={`max-w-[70%] p-3 shadow text-sm ${
-                            isMyMessage(msg)
-                              ? "bg-green-100 rounded-tl-xl rounded-bl-xl rounded-tr-xl"
-                              : "bg-white rounded-tr-xl rounded-br-xl rounded-tl-xl"
-                          }`}
+                          className="font-semibold text-xs mb-1"
+                          style={{
+                            color: scrMode === "light" ? "#4b5563" : "#d1d5db",
+                          }}
                         >
-                          {!isMyMessage(msg) && (
-                            <div className="font-semibold text-xs text-gray-600 mb-1">
-                              @{msg.sender}
-                            </div>
-                          )}
-                          <div className="whitespace-pre-line">{msg.content}</div>
-                          <div className="flex justify-end space-x-1 text-xs mt-1 text-gray-400">
-                            <span>{formatTimestamp(msg.timestamp)}</span>
-                          </div>
+                          @Gemini
+                        </div>
+                        <div className="whitespace-pre-line">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {msg.result}
+                          </ReactMarkdown>
+                        </div>
+                        <div
+                          className="flex justify-end text-xs mt-1"
+                          style={{
+                            color: scrMode === "light" ? "#9ca3af" : "#d1d5db",
+                          }}
+                        >
+                          <span>{formatTimestamp(msg.timestamp)}</span>
                         </div>
                       </div>
-                    ))}
-                </>
-              )}
-            </>
+                    </div>
+                  </div>
+                ))
+              )
+            ) : (
+              <>
+                {chatMessages.length === 0 && messages.length === 0 ? (
+                  <div
+                    style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
+                  >
+                    {locales[lang].messageNotAvailable}
+                  </div>
+                ) : (
+                  <>
+                    {[...chatMessages, ...messages]
+                      .filter(
+                        (msg) =>
+                          (msg.sender === myNick &&
+                            msg.receiver === friend.nickname) ||
+                          (msg.sender === friend.nickname &&
+                            msg.receiver === myNick)
+                      )
+                      .map((msg, idx) => (
+                        <div
+                          key={`msg-${idx}`}
+                          className={`flex ${
+                            isMyMessage(msg) ? "justify-end" : "justify-start"
+                          }`}
+                        >
+                          <div
+                            className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                            style={{
+                              backgroundColor: isMyMessage(msg)
+                                ? scrMode === "light"
+                                  ? "#d1fae5"
+                                  : "#065f46"
+                                : scrMode === "light"
+                                ? "#fff"
+                                : "#1f2937",
+                              color: scrMode === "light" ? "#000" : "#fff",
+                            }}
+                          >
+                            {!isMyMessage(msg) && (
+                              <div
+                                className="font-semibold text-xs mb-1"
+                                style={{
+                                  color:
+                                    scrMode === "light" ? "#4b5563" : "#d1d5db",
+                                }}
+                              >
+                                @{msg.sender}
+                              </div>
+                            )}
+                            <div className="whitespace-pre-line">
+                              {msg.content}
+                            </div>
+                            <div
+                              className="flex justify-end text-xs mt-1"
+                              style={{
+                                color:
+                                  scrMode === "light" ? "#9ca3af" : "#d1d5db",
+                              }}
+                            >
+                              <span>{formatTimestamp(msg.timestamp)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </>
+                )}
+              </>
+            )
+          ) : (
+            <div
+              style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
+            >
+              {locales[lang].pleaseSelectFriend}
+            </div>
           )}
         </>
       )}
     </div>
   );
+  
 }
