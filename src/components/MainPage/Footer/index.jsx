@@ -1,5 +1,5 @@
 // src/components/Footer.jsx
-import logo from "../../../images/logo.png";
+import logo from "../../../images/logo3.png";
 
 export default function Footer() {
   return (
@@ -16,15 +16,11 @@ export default function Footer() {
         <a href="#" className="hover:underline">
           Điều khoản
         </a>
-        <a href="#" className="hover:underline">
-          Tiếng Việt ▾
-        </a>
       </div>
 
-      {/* Right side: Meta logo */}
       <div className="flex items-center space-x-2 rounded-full">
         <span>from</span>
-        <img src={logo} alt="Messenger Logo" className="w-8 h-8 rounded-full" />
+        <img src={logo} alt="Messenger Logo" className="w-10 h-8 rounded-full" />
       </div>
     </footer>
   );

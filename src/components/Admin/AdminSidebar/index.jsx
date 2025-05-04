@@ -1,4 +1,3 @@
-// src/assets/components/AdminSidebar/index.jsx
 export default function AdminSidebar() {
     return (
       <div className="w-64 bg-white border-r border-gray-200 flex flex-col">

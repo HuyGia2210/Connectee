@@ -1,16 +1,16 @@
 import React from 'react';
-import AccountInfoTab from '../../../components/Settings/AccountInfoTab';
-import SecurityTab from '../../../components/Settings/SecurityTab';
-import NotificationsTab from '../../../components/Settings/NotificationsTab';
-import ConnectedAppsTab from '../../../components/Settings/ConnectedAppsTab';
+import AccountInfoTab from '../AccountInfoTab';
+import UserInterface from '../UserInterface';
+import ChangeInfomation from '../ChangeInfomation';
+import LanguageSetting from '../LanguageSetting';
 
-function MainContent({ activeTab }) {
+function MainContent({ activeTab, appUser, lang, scrMode, setLang, setScrMode}) {
   return (
     <div>
-      {activeTab === 'accountInfo' && <AccountInfoTab />}
-      {activeTab === 'security' && <SecurityTab />}
-      {activeTab === 'notifications' && <NotificationsTab />}
-      {activeTab === 'connectedApps' && <ConnectedAppsTab />}
+      {activeTab === 'accountInfo' && <AccountInfoTab appUser={appUser} scrMode={scrMode} lang={lang}/>}
+      {activeTab === 'userInterface' && <UserInterface scrMode={scrMode} setScrMode={setScrMode} lang={lang}/>}
+      {activeTab === 'changeInfomation' && <ChangeInfomation appUser={appUser} scrMode={scrMode} lang={lang}/>}
+      {activeTab === 'language' && <LanguageSetting lang={lang} setLang={setLang} scrMode={scrMode}/>}
     </div>
   );
 }

@@ -40,8 +40,6 @@ export default function SignUpForm({ onBack }) {
   const checkNullInput = (e) => {
     let pointer = e.target.name;
     let value = e.target.value;
-    console.log("Pointer: " + pointer);
-    console.log("Value: " + value);
     switch (pointer) {
       case "firstName":
         if (value === null || value === "") {
@@ -125,14 +123,12 @@ export default function SignUpForm({ onBack }) {
 
   const checkNicknameAvailability = async (nickname) => {
     try {
-      console.log(nickname);
       const res = await fetch(
         `http://localhost:8080/api/user/check-valid-nickname?nickname=${nickname}`,
         { method: "GET" }
       );
 
       if (!res.ok) {
-        console.log(res.status);
         throw new Error("Không thể kiểm tra biệt danh.");
       }
 
@@ -153,14 +149,12 @@ export default function SignUpForm({ onBack }) {
 
   const checkUsernameAvailability = async (username) => {
     try {
-      console.log(username);
       const res = await fetch(
         `http://localhost:8080/api/user/check-valid-username?username=${username}`,
         { method: "GET" }
       );
 
       if (!res.ok) {
-        console.log(res.status);
         throw new Error("Không thể kiểm tra tên đăng nhập.");
       }
 

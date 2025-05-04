@@ -20,7 +20,7 @@ export default function AuthPage() {
 
   return (
     <>
-      <div className="homePage">
+      <div className="homePage min-h-screen overflow-y-auto">
         <HeaderNav />
         <div className="grid grid-cols-2 grid-rows-2">
           <div className="col-span-1 row-span-2">

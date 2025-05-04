@@ -1,0 +1,21 @@
+.friend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .status-indicator .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .status-indicator .online {
+    background-color: rgb(3, 172, 3);
+  }
+  
+  .status-indicator .offline {
+    background-color: transparent;
+  }
+  

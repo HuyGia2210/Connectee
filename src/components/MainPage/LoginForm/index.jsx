@@ -5,7 +5,6 @@ import axios from "axios"; // Dùng axios để gọi API
 
 export default function LoginForm({ onSwitchToSignup }) {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [username, setUsername] = useState(""); // Lưu username
   const [password, setPassword] = useState(""); // Lưu password
   const [error, setError] = useState(""); // Lưu lỗi nếu có
@@ -64,16 +63,8 @@ export default function LoginForm({ onSwitchToSignup }) {
         </div>
 
         {/* Checkbox + Đăng ký */}
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              className="accent-blue-500"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-            />
-            <span>Đăng nhập với tư cách quản lý</span>
-          </label>
+        <div className="flex justify-end items-center text-sm text-gray-600">
+          <span className="text-blue-600 mr-2">Chưa có tài khoản?</span>
           <button
             type="button"
             onClick={onSwitchToSignup}
@@ -97,9 +88,9 @@ export default function LoginForm({ onSwitchToSignup }) {
 
       {/* Quên mật khẩu */}
       <div className="mt-4 text-center">
-        <a href="#" className="text-sm text-blue-600 hover:underline">
+        {/* <a href="#" className="text-sm text-blue-600 hover:underline">
           Bạn quên mật khẩu?
-        </a>
+        </a> */}
       </div>
     </div>
   );

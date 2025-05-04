@@ -1,46 +1,113 @@
-import { useState } from 'react';
-import Sidebar from '../SecondSideBar'; // Import Sidebar từ thư mục components
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react'; // Biểu tượng mũi tên từ lucide-react
 import MainContent from '../MainContent';
+import locales from '@/language/locales';
 
-function SettingsPage() {
+function SettingsPage({lang, scrMode, setLang, setScrMode}) {
   const [activeTab, setActiveTab] = useState('accountInfo');
+  const [appUser, setAppUser] = useState(null)
+  const navigate = useNavigate();
+
+  const getAppUser = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/user/get-appUser-by-nickname?nickname=" +
+          localStorage.getItem("nickname"),
+        { credentials: "include" }
+      );
+      const user = await res.json(); 
+      setAppUser(user);
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  useEffect(()=>{
+    getAppUser()
+  },[])
+
+  const tabs = [
+    { key: 'accountInfo', label: locales[lang].accountInformation },
+    { key: 'userInterface', label: locales[lang].userInterface },
+    { key: 'language', label: locales[lang].language },
+    { key: 'changeInfomation', label: locales[lang].changeInfomation },
+  ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 p-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex space-x-4 mb-6 border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('accountInfo')}
-              className={`pb-2 ${activeTab === 'accountInfo' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
-            >
-              Thông tin tài khoản
-            </button>
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`pb-2 ${activeTab === 'security' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
-            >
-              Bảo mật
-            </button>
-            <button
-              onClick={() => setActiveTab('notifications')}
-              className={`pb-2 ${activeTab === 'notifications' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
-            >
-              Thông báo
-            </button>
-            <button
-              onClick={() => setActiveTab('connectedApps')}
-              className={`pb-2 ${activeTab === 'connectedApps' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'}`}
-            >
-              Ứng dụng đã kết nối
-            </button>
+    <div
+      className="flex h-screen"
+      style={{
+        backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827", // gray-50 / gray-900
+      }}
+    >
+      {/* Nội dung chính */}
+      <div className="flex-1 p-4 md:p-8 relative">
+        {/* Nút quay lại */}
+        <button
+          onClick={() => navigate("/chat")}
+          className="flex items-center gap-1 text-sm mb-4 transition"
+          style={{
+            color: scrMode === "light" ? "#4b5563" : "#d1d5db", // gray-600 / gray-300
+          }}
+        >
+          <ArrowLeft size={16} />
+          {locales[lang].back}
+        </button>
+  
+        <div
+          className="rounded-xl shadow-lg p-6"
+          style={{
+            backgroundColor: scrMode === "light" ? "#ffffff" : "#1f2937", // white / gray-800
+          }}
+        >
+          {/* Tabs */}
+          <div
+            className="flex flex-wrap gap-4 mb-6 border-b pb-2"
+            style={{
+              borderBottomColor: scrMode === "light" ? "#e5e7eb" : "#374151", // gray-200 / gray-700
+            }}
+          >
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className="px-4 py-2 rounded-full text-sm transition-all"
+                style={{
+                  backgroundColor:
+                    activeTab === tab.key
+                      ? scrMode === "light"
+                        ? "#dbeafe" // blue-100
+                        : "#1e3a8a20" // blue-900/10
+                      : "transparent",
+                  color:
+                    activeTab === tab.key
+                      ? "#1d4ed8" // blue-700
+                      : scrMode === "light"
+                      ? "#6b7280" // gray-500
+                      : "#9ca3af", // gray-400
+                  fontWeight: activeTab === tab.key ? "500" : "normal",
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <MainContent activeTab={activeTab} />
+  
+          {/* Nội dung chính theo tab */}
+          <MainContent
+            activeTab={activeTab}
+            appUser={appUser}
+            lang={lang}
+            scrMode={scrMode}
+            setLang={setLang}
+            setScrMode={setScrMode}
+          />
         </div>
       </div>
     </div>
   );
+  
 }
 
 export default SettingsPage;
