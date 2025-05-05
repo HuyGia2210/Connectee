@@ -480,7 +480,7 @@ export default function SignUpForm({ onBack }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full py-2 text-white font-semibold rounded-md${
+          className={`w-full py-2 text-white font-semibold rounded-md ${
             isSubmitting
               ? "bg-blue-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
