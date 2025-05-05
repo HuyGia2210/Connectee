@@ -9,18 +9,20 @@ export default function LoginForm({ onSwitchToSignup }) {
   const [password, setPassword] = useState(""); // Lưu password
   const [error, setError] = useState(""); // Lưu lỗi nếu có
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/user/login",
+        `${API_URL}/api/user/login`,
         { username, password },
         { withCredentials: true } // QUAN TRỌNG: để browser tự nhận cookie HttpOnly
       );
 
       if (response.status === 200) {
         const nickResp = await axios.get(
-          "http://localhost:8080/api/user/get-nickname",
+          `${API_URL}/api/user/get-nickname`,
           { withCredentials: true }
         );
 

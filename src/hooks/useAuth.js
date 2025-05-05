@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 
 export default function useAuth() {
   const [isAuth, setIsAuth] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/user/auth/check", {
+        const res = await fetch(`${API_URL}/api/user/auth/check`, {
           credentials: "include", // gửi cookie
         });
         

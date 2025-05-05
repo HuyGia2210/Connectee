@@ -7,16 +7,18 @@ export default function StatisticsSection() {
   const [messageCount, setMessageCount] = useState(0);
   const [onlineUserCount, setOnlineUserCount] = useState(0);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
-    axios.get("http://localhost:8080/api/stat/get-number-of-app-user")
+    axios.get(`${API_URL}/api/stat/get-number-of-app-user`)
       .then(res => setUserCount(res.data))
       .catch(err => console.error("Error fetching user count", err));
 
-    axios.get("http://localhost:8080/api/stat/get-number-of-messages")
+    axios.get(`${API_URL}/api/stat/get-number-of-messages`)
       .then(res => setMessageCount(res.data))
       .catch(err => console.error("Error fetching message count", err));
 
-    axios.get("http://localhost:8080/api/stat/get-number-of-online-user")
+    axios.get(`${API_URL}/api/stat/get-number-of-online-user`)
       .then(res => setOnlineUserCount(res.data))
       .catch(err => console.error("Error fetching online user count", err));
   }, []);

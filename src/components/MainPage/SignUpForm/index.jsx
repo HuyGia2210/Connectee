@@ -33,6 +33,8 @@ export default function SignUpForm({ onBack }) {
   const [suggestedUsernames, setSuggestedUsernames] = useState([]);
   const [suggestedNicknames, setSuggestedNicknames] = useState([]);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -124,7 +126,7 @@ export default function SignUpForm({ onBack }) {
   const checkNicknameAvailability = async (nickname) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/api/user/check-valid-nickname?nickname=${nickname}`,
+        `${API_URL}/api/user/check-valid-nickname?nickname=${nickname}`,
         { method: "GET" }
       );
 
@@ -150,7 +152,7 @@ export default function SignUpForm({ onBack }) {
   const checkUsernameAvailability = async (username) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/api/user/check-valid-username?username=${username}`,
+        `${API_URL}/api/user/check-valid-username?username=${username}`,
         { method: "GET" }
       );
 
@@ -248,7 +250,7 @@ export default function SignUpForm({ onBack }) {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/user/register", {
+      const res = await fetch(`${API_URL}/api/user/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -257,7 +259,7 @@ export default function SignUpForm({ onBack }) {
 
       if (res.ok) {
         const nickResp = await axios.get(
-          "http://localhost:8080/api/user/get-nickname",
+          `${API_URL}/api/user/get-nickname`,
           { withCredentials: true }
         );
 

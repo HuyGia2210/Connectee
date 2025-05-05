@@ -21,6 +21,8 @@ export default function ChatBody({
   const [aiChatMess, setAIChatMess] = useState([]);
   const chatContainerRef = useRef(null);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const nick = localStorage.getItem("nickname");
     if (nick) setMyNick(nick);
@@ -37,7 +39,7 @@ export default function ChatBody({
       ) {
         try {
           const res = await axios.get(
-            "http://localhost:8080/api/ai/get-history",
+            `${API_URL}/api/ai/get-history`,
             {
               withCredentials: true,
             }
@@ -52,7 +54,7 @@ export default function ChatBody({
       } else {
         try {
           const res = await axios.post(
-            "http://localhost:8080/api/chat/get-chat",
+            `${API_URL}/api/chat/get-chat`,
             { user1: myNick, user2: friend.nickname },
             { withCredentials: true }
           );

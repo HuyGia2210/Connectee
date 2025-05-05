@@ -9,10 +9,12 @@ function SettingsPage({lang, scrMode, setLang, setScrMode}) {
   const [appUser, setAppUser] = useState(null)
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const getAppUser = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/api/user/get-appUser-by-nickname?nickname=" +
+        `${API_URL}/api/user/get-appUser-by-nickname?nickname=` +
           localStorage.getItem("nickname"),
         { credentials: "include" }
       );
