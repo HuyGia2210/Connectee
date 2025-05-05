@@ -8,21 +8,30 @@ export default function useAuth() {
     const checkAuth = async () => {
       try {
         const res = await fetch(`${API_URL}/api/user/auth/check`, {
-          credentials: "include", // gửi cookie
+          credentials: "include",
         });
-        
-        setIsAuth(res.ok);
-        console.log(res.status)
-        
-      } catch(e) {
+
+        if (res.status === 200) {
+          setIsAuth(true);
+        } else {
+          // Nếu trả về 401/403 hoặc bất kỳ gì khác 200
+          setIsAuth(false);
+          await fetch(`${API_URL}/api/user/logout`, {
+            method: "post",
+            credentials: "include",
+          });
+        }
+      } catch (e) {
+        // Chỉ khi lỗi mạng thật sự
         setIsAuth(false);
         await fetch(`${API_URL}/api/user/logout`, {
           method: "post",
-          credentials: "include", // gửi cookie
+          credentials: "include",
         });
-        console.log(e);
+        console.error(e);
       }
     };
+
     checkAuth();
   }, []);
 
