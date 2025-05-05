@@ -4,6 +4,8 @@ import axios from "axios";
 
 export default function SignUpForm({ onBack }) {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -250,6 +252,7 @@ export default function SignUpForm({ onBack }) {
     };
 
     try {
+      setIsSubmitting(true);
       const res = await fetch(`${API_URL}/api/user/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -276,6 +279,8 @@ export default function SignUpForm({ onBack }) {
     } catch (err) {
       console.error(err);
       alert("Lỗi server");
+    }finally{
+      setIsSubmitting(false);
     }
   };
 
@@ -474,9 +479,14 @@ export default function SignUpForm({ onBack }) {
 
         <button
           type="submit"
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md"
+          disabled={isSubmitting}
+          className={`w-full py-2 text-white font-semibold rounded-md${
+            isSubmitting
+              ? "bg-blue-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Gửi
+          {isSubmitting ? "Đang gửi..." : "Gửi"}
         </button>
       </form>
 

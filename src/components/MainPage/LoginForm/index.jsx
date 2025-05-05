@@ -8,11 +8,14 @@ export default function LoginForm({ onSwitchToSignup }) {
   const [username, setUsername] = useState(""); // Lưu username
   const [password, setPassword] = useState(""); // Lưu password
   const [error, setError] = useState(""); // Lưu lỗi nếu có
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Disable nút
+
     try {
       const response = await axios.post(
         `${API_URL}/api/user/login`,
@@ -21,21 +24,22 @@ export default function LoginForm({ onSwitchToSignup }) {
       );
 
       if (response.status === 200) {
-        const nickResp = await axios.get(
-          `${API_URL}/api/user/get-nickname`,
-          { withCredentials: true }
-        );
+        const nickResp = await axios.get(`${API_URL}/api/user/get-nickname`, {
+          withCredentials: true,
+        });
 
         if (nickResp.status === 200) {
           const nickname = nickResp.data;
           localStorage.setItem("nickname", nickname);
         }
-        
+
         navigate("/chat");
       }
     } catch (err) {
       console.error(err);
       setError("Tên đăng nhập hoặc mật khẩu không đúng!");
+    } finally {
+      setIsSubmitting(false); // Enable nút lại (dù login thành công hay thất bại)
     }
   };
 
@@ -82,18 +86,19 @@ export default function LoginForm({ onSwitchToSignup }) {
         {/* Đăng nhập button */}
         <button
           type="submit"
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md"
+          disabled={isSubmitting}
+          className={`w-full py-2 text-white font-semibold rounded-md ${
+            isSubmitting
+              ? "bg-blue-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Đăng nhập
+          {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
       </form>
 
       {/* Quên mật khẩu */}
-      <div className="mt-4 text-center">
-        {/* <a href="#" className="text-sm text-blue-600 hover:underline">
-          Bạn quên mật khẩu?
-        </a> */}
-      </div>
+      <div className="mt-4 text-center"></div>
     </div>
   );
 }
