@@ -16,6 +16,10 @@ export default function useAuth() {
         
       } catch(e) {
         setIsAuth(false);
+        await fetch(`${API_URL}/api/user/logout`, {
+          method: "post",
+          credentials: "include", // gửi cookie
+        });
         console.log(e);
       }
     };
