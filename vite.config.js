@@ -12,5 +12,9 @@ export default defineConfig({
     alias: {
       '@': '/src' // Alias `@` trỏ đến thư mục `src`
     }
-  }
+  },
+  build: {
+    outDir: 'dist',  // Đảm bảo output vào thư mục dist
+  },
+  base: '/',
 })
