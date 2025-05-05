@@ -17,7 +17,7 @@ export default function LoginForm({ onSwitchToSignup }) {
       const response = await axios.post(
         `${API_URL}/api/user/login`,
         { username, password },
-        { withCredentials: true } // QUAN TRỌNG: để browser tự nhận cookie HttpOnly
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
@@ -31,7 +31,7 @@ export default function LoginForm({ onSwitchToSignup }) {
           localStorage.setItem("nickname", nickname);
         }
         
-        navigate("/chat"); // Đăng nhập thành công -> sang /chat
+        navigate("/chat");
       }
     } catch (err) {
       console.error(err);
