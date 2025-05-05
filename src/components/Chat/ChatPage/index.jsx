@@ -21,10 +21,13 @@ export default function ChatPage({ lang, scrMode }) {
     setMessages([]);
   };
 
+  const API_URL = import.meta.env.VITE_API_URL;
+  const WS_URL = import.meta.env.VITE_WS_URL;
+
   const getOnlineFriend = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/api/user/get-online-friends-by-nickname?nickname=" +
+        `${API_URL}/api/user/get-online-friends-by-nickname?nickname=` +
           localStorage.getItem("nickname"),
         { credentials: "include" }
       );
@@ -46,7 +49,7 @@ export default function ChatPage({ lang, scrMode }) {
     if (!myNick.current) return console.error("No nickname in localStorage");
 
     const client = new Client({
-      brokerURL: `ws://localhost:8080/ws?nickname=${myNick.current}`,
+      brokerURL: `${WS_URL}/ws?nickname=${myNick.current}`,
       connectHeaders: {},
       debug: (str) => console.log(str),
       onConnect: () => {
@@ -57,7 +60,7 @@ export default function ChatPage({ lang, scrMode }) {
           try {
             // Gọi API để lấy nickname từ username của sender
             const res = await axios.get(
-              "http://localhost:8080/api/user/get-nickname-by-username?username=" +
+              `${API_URL}/api/user/get-nickname-by-username?username=` +
                 msg.receiver
             );
 
@@ -72,7 +75,7 @@ export default function ChatPage({ lang, scrMode }) {
           try {
             // Gọi API để lấy nickname từ username của sender
             const res = await axios.get(
-              "http://localhost:8080/api/user/get-nickname-by-username?username=" +
+              `${API_URL}/api/user/get-nickname-by-username?username=` +
                 msg.sender
             );
 
@@ -129,7 +132,7 @@ export default function ChatPage({ lang, scrMode }) {
       try {
         setLoading(true);
         const res = await axios.get(
-          "http://localhost:8080/api/ai/generate?prompt=" +
+          `${API_URL}/api/ai/generate?prompt=` +
             encodeURIComponent(content),
           {
             withCredentials: true,
@@ -154,7 +157,7 @@ export default function ChatPage({ lang, scrMode }) {
       try {
         // Gọi API để lấy nickname từ username của sender
         const res = await axios.get(
-          "http://localhost:8080/api/user/get-username-by-nickname?nickname=" +
+          `${API_URL}/api/user/get-username-by-nickname?nickname=` +
             selectedFriend.nickname
         );
 

@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function ChangeInfomation({ appUser, scrMode, lang }) {
   const [formData, setFormData] = useState({
     fullName: appUser.fullName || "",
@@ -44,7 +46,7 @@ function ChangeInfomation({ appUser, scrMode, lang }) {
     const saveInfo = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8080/api/user/update-information",
+          `${API_URL}/api/user/update-information`,
           {
             method: "POST",
             headers: {

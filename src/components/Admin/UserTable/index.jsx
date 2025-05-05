@@ -7,9 +7,11 @@ export default function UserTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/stat/get-all-app-user")
+      .get(`${API_URL}/api/stat/get-all-app-user`)
       .then((res) => setUsers(res.data))
       .catch((err) =>
         console.error("Lỗi khi fetch danh sách người dùng:", err)

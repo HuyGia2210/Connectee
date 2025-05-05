@@ -16,10 +16,12 @@ export default function App() {
   const [lang, setLang] = useState("vn");
   const [scrMode, setScrMode] = useState("light");
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchSetting = async()=>{
     try {
       const res = await fetch(
-        "http://localhost:8080/api/user/get-settings",
+        `${API_URL}/api/user/get-settings`,
         { credentials: "include" }
       );
       const setting = await res.json(); 
@@ -47,7 +49,7 @@ export default function App() {
 
   const saveLangSetting = async (lang) => {
     try {
-      const res = await fetch("http://localhost:8080/api/user/update-settings", {
+      const res = await fetch(`${API_URL}/api/user/update-settings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +78,7 @@ export default function App() {
       scrMode: scrMode,
     }))
     try {
-      const res = await fetch("http://localhost:8080/api/user/update-settings", {
+      const res = await fetch(`${API_URL}/api/user/update-settings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -24,6 +24,7 @@ export default function Sidebar({
 
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const nickname = localStorage.getItem("nickname");
 
@@ -55,7 +56,7 @@ export default function Sidebar({
   const fetchFullnameForAvatar = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/user/get-appUser-by-nickname?nickname=" +
+        `${API_URL}/api/user/get-appUser-by-nickname?nickname=` +
           localStorage.getItem("nickname"),
         {
           withCredentials: true,
@@ -73,7 +74,7 @@ export default function Sidebar({
 
   const fetchFriends = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/user/friend-list", {
+      const res = await fetch(`${API_URL}/api/user/friend-list`, {
         credentials: "include",
       });
       const apiFriends = res.ok ? await res.json() : [];
@@ -89,7 +90,7 @@ export default function Sidebar({
   const fetchFriendRequests = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8080/api/user/get-friend-request",
+        `${API_URL}/api/user/get-friend-request`,
         {
           credentials: "include",
         }
@@ -119,7 +120,7 @@ export default function Sidebar({
     setSearchLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:8080/api/user/find-friend?input=${encodeURIComponent(
+        `${API_URL}/api/user/find-friend?input=${encodeURIComponent(
           searchInput
         )}`,
         {
@@ -145,7 +146,7 @@ export default function Sidebar({
     try {
 
       const res = await fetch(
-        `http://localhost:8080/api/user/send-friend-request?nickname=${encodeURIComponent(
+        `${API_URL}/api/user/send-friend-request?nickname=${encodeURIComponent(
           nickName
         )}`,
         {
@@ -169,7 +170,7 @@ export default function Sidebar({
   const acceptFriendRequest = async (nickName) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/api/user/accept-friend-request?nickname=${encodeURIComponent(
+        `${API_URL}/api/user/accept-friend-request?nickname=${encodeURIComponent(
           nickName
         )}`,
         {
@@ -214,7 +215,7 @@ export default function Sidebar({
 
   const handleLogOut = async () => {
     try {
-      await fetch("http://localhost:8080/api/user/logout", {
+      await fetch(`${API_URL}/api/user/logout`, {
         method: "post",
         credentials: "include", // gửi cookie
       });

@@ -12,6 +12,8 @@ export default function AdminPage() {
   const [newAdminPassword, setNewAdminPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     // Kiểm tra nếu trước đó đã đăng nhập admin
     const loggedIn = localStorage.getItem("admin_logged_in");
@@ -25,7 +27,7 @@ export default function AdminPage() {
     // Kiểm tra đăng nhập, nếu username là "admin" và password là "admin123", cho phép tạo tài khoản admin
     try {
       const response = await fetch(
-        `http://localhost:8080/api/admin/check-valid-admin-acc?username=${username}&password=${password}`
+        `${API_URL}/api/admin/check-valid-admin-acc?username=${username}&password=${password}`
       );
       const data = await response.json();
       if (data) {
@@ -51,7 +53,7 @@ export default function AdminPage() {
     if (newAdminUsername && newAdminPassword) {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/admin/add-admin?username=${newAdminUsername}&password=${newAdminPassword}`,
+          `${API_URL}/api/admin/add-admin?username=${newAdminUsername}&password=${newAdminPassword}`,
           { method: "GET" }
         );
 
