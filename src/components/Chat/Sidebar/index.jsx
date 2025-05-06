@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Thêm useNavigate
-import "./Sidebar.css";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import locales from "@/language/locales";
 
@@ -12,21 +11,18 @@ export default function Sidebar({
   scrMode,
 }) {
   const [appUser, setAppUser] = useState({});
-
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [loadingFriends, setLoadingFriends] = useState(true);
   const [loadingRequests, setLoadingRequests] = useState(true);
-
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
-
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const API_URL = import.meta.env.VITE_API_URL;
-
   const nickname = localStorage.getItem("nickname");
+  const navigate = useNavigate();
 
   const toggleDropdown = () => setOpen(!open);
 
@@ -35,7 +31,6 @@ export default function Sidebar({
     nickname: "embeddedAIByConnectee",
     isAI: true,
   };
-  const navigate = useNavigate(); // Thêm useNavigate
 
   useEffect(() => {
     fetchFullnameForAvatar();
@@ -63,7 +58,6 @@ export default function Sidebar({
         }
       );
       if (res.status === 200) {
-        // Thay sender bằng nickname đã lấy được
         setAppUser(res.data);
       }
     } catch (e) {
@@ -78,7 +72,6 @@ export default function Sidebar({
         credentials: "include",
       });
       const apiFriends = res.ok ? await res.json() : [];
-      // Gộp AI_USER vào đầu danh sách
       setFriends([AI_USER, ...apiFriends]);
     } catch {
       setFriends([]);
@@ -111,7 +104,7 @@ export default function Sidebar({
 
     const timer = setTimeout(() => {
       fetchSearch();
-    }, 300); // debounce 300ms
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [searchInput]);
@@ -144,7 +137,6 @@ export default function Sidebar({
 
   const sendFriendRequest = async (nickName) => {
     try {
-
       const res = await fetch(
         `${API_URL}/api/user/send-friend-request?nickname=${encodeURIComponent(
           nickName
@@ -181,8 +173,8 @@ export default function Sidebar({
 
       if (res.ok) {
         alert(`Đã chấp nhận @${nickName}`);
-        fetchFriends(); // reload lại danh sách bạn bè
-        fetchFriendRequests(); // reload lại danh sách lời mời
+        fetchFriends();
+        fetchFriendRequests();
       } else {
         alert("Chấp nhận thất bại");
       }
@@ -191,7 +183,6 @@ export default function Sidebar({
     }
   };
 
-  // Lấy chữ cái đầu của từ cuối cùng trong nickname
   const getAvatarLetter = (nickname) => {
     if (!nickname) return "?";
     if (nickname === "embeddedAIByConnectee") return "AI";
@@ -210,14 +201,14 @@ export default function Sidebar({
   };
 
   const handleMenuClick = () => {
-    navigate("/settings"); // Chuyển hướng đến trang cài đặt
+    navigate("/settings");
   };
 
   const handleLogOut = async () => {
     try {
       await fetch(`${API_URL}/api/user/logout`, {
         method: "post",
-        credentials: "include", // gửi cookie
+        credentials: "include",
       });
 
       navigate("/");
@@ -228,20 +219,20 @@ export default function Sidebar({
 
   return (
     <div
-      className={`w-md flex flex-col h-screen border-r ${
+      className={`w-full flex flex-col h-screen border-r ${
         scrMode === "dark"
           ? "bg-gray-900 text-white border-gray-700"
           : "bg-white text-black border-gray-300"
       }`}
     >
       {/* Header & Search */}
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="font-semibold text-lg">Connectee</div>
           <div className="relative">
             <div
               onClick={toggleDropdown}
-              className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg cursor-pointer"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg cursor-pointer"
             >
               {getAvatarLetter(appUser.fullName)}
             </div>
@@ -249,25 +240,25 @@ export default function Sidebar({
             {open && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 right-0 w-60 shadow-xl rounded-xl p-4 z-50 border"
+                className="absolute top-full mt-2 right-0 w-48 sm:w-60 shadow-xl rounded-xl p-3 sm:p-4 z-50 border"
                 style={{
-                  backgroundColor: scrMode === "dark" ? "#1f2937" : "#dbeafe", // gray-800 / blue-100
-                  borderColor: scrMode === "dark" ? "#4b5563" : "#bfdbfe", // gray-600 / blue-200
-                  color: scrMode === "dark" ? "#ffffff" : "#000000", // text-white / text-black
+                  backgroundColor: scrMode === "dark" ? "#1f2937" : "#dbeafe",
+                  borderColor: scrMode === "dark" ? "#4b5563" : "#bfdbfe",
+                  color: scrMode === "dark" ? "#ffffff" : "#000000",
                 }}
               >
                 <div
                   className="text-sm mb-2"
                   style={{
-                    color: scrMode === "dark" ? "#d1d5db" : "#374151", // gray-300 / gray-700
+                    color: scrMode === "dark" ? "#d1d5db" : "#374151",
                   }}
                 >
-                  <div className="font-semibold text-lg">
+                  <div className="font-semibold text-base sm:text-lg">
                     {appUser.fullName}
                   </div>
                   <div
                     style={{
-                      color: scrMode === "dark" ? "#9ca3af" : "#6b7280", // gray-400 / gray-500
+                      color: scrMode === "dark" ? "#9ca3af" : "#6b7280",
                     }}
                   >
                     @{appUser.nickname}
@@ -276,9 +267,9 @@ export default function Sidebar({
 
                 <button
                   onClick={handleMenuClick}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 rounded"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded"
                   style={{
-                    color: "#2563eb", // text-blue-600
+                    color: "#2563eb",
                     backgroundColor:
                       scrMode === "dark" ? "transparent" : undefined,
                   }}
@@ -288,9 +279,9 @@ export default function Sidebar({
 
                 <button
                   onClick={handleLogOut}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 rounded"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded"
                   style={{
-                    color: "#dc2626", // text-red-600
+                    color: "#dc2626",
                     backgroundColor:
                       scrMode === "dark" ? "transparent" : undefined,
                   }}
@@ -307,13 +298,13 @@ export default function Sidebar({
             placeholder={locales[lang].findFriend}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
               scrMode === "dark"
                 ? "bg-gray-800 text-white placeholder-gray-400"
                 : "bg-gray-100 text-black"
             }`}
           />
-          <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          <i className="ri-search-line absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           {searchInput.trim() !== "" && (
             <div
               className={`absolute w-full shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto z-10 ${
@@ -323,35 +314,34 @@ export default function Sidebar({
               }`}
             >
               {searchLoading ? (
-                <div className="p-4 text-gray-500">
+                <div className="p-3 sm:p-4 text-gray-500">
                   {locales[lang].searching}
                 </div>
-              ) : searchResults.filter((u) => u.nickname !== nickname)
-                  .length === 0 ? (
-                <div className="p-4 text-gray-500">
-                  {locales[lang].noFriendFound}{" "}
-                  {/* Vẫn hiển thị thông báo không tìm thấy bạn */}
+              ) : searchResults.filter((u) => u.nickname !== nickname).length ===
+                0 ? (
+                <div className="p-3 sm:p-4 text-gray-500">
+                  {locales[lang].noFriendFound}
                 </div>
               ) : (
                 searchResults
-                  .filter((u) => u.nickname !== nickname) // Loại bỏ người dùng chính ra khỏi kết quả
+                  .filter((u) => u.nickname !== nickname)
                   .map((u) => {
                     const isFriend = friends.some(
                       (friend) => friend.nickname === u.nickname
-                    ); // Kiểm tra xem có phải bạn bè không
+                    );
 
                     return (
                       <div
                         key={u.nickname}
-                        className={`flex items-center px-4 py-2 cursor-pointer border-b ${
+                        className={`flex items-center px-3 sm:px-4 py-2 cursor-pointer border-b ${
                           scrMode === "dark"
                             ? "bg-gray-800 text-white border-gray-700 hover:bg-gray-700"
                             : "bg-white text-black border-gray-200 hover:bg-gray-100"
                         }`}
-                        onClick={() => onSelectFriend(u)} // Toàn bộ div có thể nhấn để chọn bạn
+                        onClick={() => onSelectFriend(u)}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 text-blue-500 font-bold ${
+                          className={`w-6 sm:w-8 h-6 sm:h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 sm:mr-3 text-blue-500 font-bold text-sm ${
                             scrMode === "dark"
                               ? "bg-gray-600 text-white"
                               : "bg-gray-200 text-blue-500"
@@ -361,14 +351,14 @@ export default function Sidebar({
                         </div>
                         <div className="flex-1">
                           <div
-                            className={`font-medium ${
+                            className={`font-medium text-sm ${
                               scrMode === "dark" ? "text-white" : "text-black"
                             }`}
                           >
                             {u.fullName}
                           </div>
                           <div
-                            className={`text-sm text-gray-500 ${
+                            className={`text-xs ${
                               scrMode === "dark"
                                 ? "text-gray-400"
                                 : "text-gray-500"
@@ -380,9 +370,8 @@ export default function Sidebar({
                         {isFriend ? (
                           <></>
                         ) : (
-                          // Nếu chưa là bạn, hiển thị nút "Thêm bạn"
                           <button
-                            className={`text-sm ${
+                            className={`text-xs ${
                               scrMode === "dark"
                                 ? "text-green-400"
                                 : "text-green-500"
@@ -410,15 +399,15 @@ export default function Sidebar({
           scrMode === "dark" ? "border-gray-700" : "border-gray-200"
         }`}
       >
-        <div className="p-3 font-semibold text-gray-700 dark:text-gray-200">
+        <div className="p-3 font-semibold text-gray-700 dark:text-gray-200 text-sm">
           {locales[lang].friend}
         </div>
         {loadingFriends ? (
-          <div className="p-4 text-gray-500 dark:text-gray-400">
+          <div className="p-3 sm:p-4 text-gray-500 dark:text-gray-400 text-sm">
             {locales[lang].loadingFriendList}
           </div>
         ) : friends.length === 0 ? (
-          <div className="p-4 text-gray-500 dark:text-gray-400">
+          <div className="p-3 sm:p-4 text-gray-500 dark:text-gray-400 text-sm">
             {locales[lang].findNoFriends}
           </div>
         ) : (
@@ -434,50 +423,46 @@ export default function Sidebar({
                 <div
                   key={f.nickname}
                   onClick={() => onSelectFriend(f)}
-                  className="flex items-center p-3 rounded-2xl border shadow-sm cursor-pointer transition hover:opacity-90"
+                  className="flex items-center p-2 sm:p-3 rounded-2xl border shadow-sm cursor-pointer transition hover:opacity-90"
                   style={{
                     backgroundColor: isSelected
                       ? scrMode === "light"
-                        ? "#dbeafe" // blue-100
-                        : "#1e40af80" // blue-900/50
+                        ? "#dbeafe"
+                        : "#1e40af80"
                       : scrMode === "light"
                       ? "#ffffff"
-                      : "#1f2937", // gray-800
-                    borderColor: scrMode === "light" ? "#e5e7eb" : "#374151", // gray-200 / gray-700
+                      : "#1f2937",
+                    borderColor: scrMode === "light" ? "#e5e7eb" : "#374151",
                   }}
                 >
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center mr-3 font-bold"
+                    className="w-8 sm:w-10 h-8 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 font-bold"
                     style={{
                       backgroundColor:
-                        scrMode === "light" ? "#d1d5db" : "#4b5563", // gray-300 / gray-600
-                      color: scrMode === "light" ? "#2563eb" : "#ffffff", // blue-600
+                        scrMode === "light" ? "#d1d5db" : "#4b5563",
+                      color: scrMode === "light" ? "#2563eb" : "#ffffff",
                     }}
                   >
                     {getAvatarLetter(f.fullName)}
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="font-medium"
-                        style={{
-                          color: scrMode === "light" ? "#1f2937" : "#f9fafb", // gray-800 / gray-100
-                        }}
-                      >
-                        {getFullName(f.fullName)}
-                      </div>
-                      {!isAI && (
-                        <span className="status-indicator">
-                          <span
-                            className={`dot ${isOnline ? "online" : "offline"}`}
-                          />
-                        </span>
-                      )}
-                    </div>
+                  <div className="flex-1 flex items-center gap-2">
                     <div
-                      className="text-sm truncate"
+                      className="font-medium text-sm"
                       style={{
-                        color: scrMode === "light" ? "#6b7280" : "#d1d5db", // gray-500 / gray-400
+                        color: scrMode === "light" ? "#1f2937" : "#f9fafb",
+                      }}
+                    >
+                      {getFullName(f.fullName)}
+                    </div>
+                    {!isAI && (
+                      <span className="inline-block w-2.5 h-2.5 rounded-full" style={{
+                        backgroundColor: isOnline ? "#03AC03" : "transparent"
+                      }} />
+                    )}
+                    <div
+                      className="text-xs truncate"
+                      style={{
+                        color: scrMode === "light" ? "#6b7280" : "#d1d5db",
                       }}
                     >
                       @{getNickame(f.nickname)}
@@ -492,19 +477,19 @@ export default function Sidebar({
 
       {/* Lời mời kết bạn */}
       <div
-        className={`h-64 overflow-y-auto border-t-1 transition ${
+        className={`h-48 sm:h-64 overflow-y-auto border-t-1 transition ${
           scrMode === "dark" ? "border-gray-700" : "border-gray-200"
         }`}
       >
-        <div className="p-3 font-semibold text-gray-700 dark:text-gray-200">
+        <div className="p-3 font-semibold text-gray-700 dark:text-gray-200 text-sm">
           {locales[lang].friendRequest}
         </div>
         {loadingRequests ? (
-          <div className="p-4 text-gray-500 dark:text-gray-400">
+          <div className="p-3 sm:p-4 text-gray-500 dark:text-gray-400 text-sm">
             {locales[lang].loadingFriendRequest}
           </div>
         ) : friendRequests.length === 0 ? (
-          <div className="p-4 text-gray-500 dark:text-gray-400">
+          <div className="p-3 sm:p-4 text-gray-500 dark:text-gray-400 text-sm">
             {locales[lang].noFriendRequest}
           </div>
         ) : (
@@ -512,21 +497,42 @@ export default function Sidebar({
             {friendRequests.map((r) => (
               <div
                 key={r.nickname}
-                className="flex items-center p-3 rounded-2xl border shadow-sm bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                className="flex items-center p-2 sm:p-3 rounded-2xl border shadow-sm transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                style={{
+                  backgroundColor:
+                    scrMode === "dark" ? "#1f2937" : "#ffffff",
+                  borderColor: scrMode === "light" ? "#e5e7eb" : "#374151",
+                }}
               >
-                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center mr-3 text-blue-500 font-bold">
+                <div
+                  className="w-8 sm:w-10 h-8 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 text-blue-500 font-bold"
+                  style={{
+                    backgroundColor:
+                      scrMode === "dark" ? "#4b5563" : "#d1d5db",
+                  }}
+                >
                   {getLastWordFirstChar(r.fullName)}
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-gray-800 dark:text-gray-100">
+                  <div
+                    className="font-medium text-sm"
+                    style={{
+                      color: scrMode === "dark" ? "#f9fafb" : "#1f2937",
+                    }}
+                  >
                     {r.fullName}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  <div
+                    className="text-xs truncate"
+                    style={{
+                      color: scrMode === "dark" ? "#d1d5db" : "#6b7280",
+                    }}
+                  >
                     @{r.nickname}
                   </div>
                 </div>
                 <button
-                  className="text-sm text-green-600 dark:text-green-400 hover:underline ml-2"
+                  className="text-xs text-green-600 dark:text-green-400 hover:underline ml-2"
                   onClick={() => acceptFriendRequest(r.nickname)}
                 >
                   {locales[lang].accept}
@@ -540,7 +546,6 @@ export default function Sidebar({
   );
 }
 
-// Hàm lấy ký tự đầu của từ cuối cùng trong fullName
 function getLastWordFirstChar(fullName) {
   if (!fullName) return "?";
   const words = fullName.trim().split(" ");
