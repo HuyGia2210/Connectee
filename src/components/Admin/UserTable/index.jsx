@@ -25,25 +25,25 @@ export default function UserTable() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
-        <table className="min-w-full">
+      <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
+        <table className="min-w-full table-auto">
           <thead>
-            <tr className="bg-gray-100 text-gray-600 text-sm">
-              <th className="py-3 px-4 text-left">Mã tài khoản</th>
-              <th className="py-3 px-4 text-left">Họ và tên</th>
-              <th className="py-3 px-4 text-left">Biệt danh</th>
-              <th className="py-3 px-4 text-left">Ngày sinh</th>
-              <th className="py-3 px-4 text-left">Email</th>
-              <th className="py-3 px-4 text-left">Giới tính</th>
+            <tr className="bg-gray-100 text-gray-600 text-xs sm:text-sm font-semibold">
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[100px]">Mã tài khoản</th>
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[120px]">Họ và tên</th>
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[100px]">Biệt danh</th>
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[100px]">Ngày sinh</th>
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[150px]">Email</th>
+              <th className="py-3 px-3 sm:px-4 text-left min-w-[80px]">Giới tính</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, idx) => (
-              <tr key={idx} className="border-t">
-                <td className="py-3 px-4">{user.accId}</td>
-                <td className="py-3 px-4">{user.fullName}</td>
-                <td className="py-3 px-4">{user.nickname}</td>
-                <td className="py-3 px-4">
+              <tr key={idx} className="border-t hover:bg-gray-50 transition duration-200">
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">{user.accId}</td>
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">{user.fullName}</td>
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">{user.nickname}</td>
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">
                   {user.dob
                     ? new Date(user.dob).toLocaleDateString("vi-VN", {
                         day: "2-digit",
@@ -52,8 +52,8 @@ export default function UserTable() {
                       })
                     : ""}
                 </td>
-                <td className="py-3 px-4">{user.email}</td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">{user.email}</td>
+                <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm">
                   {user.gender === "MALE"
                     ? "Nam"
                     : user.gender === "FEMALE"

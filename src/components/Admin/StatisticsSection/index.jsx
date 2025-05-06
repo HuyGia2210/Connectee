@@ -24,27 +24,21 @@ export default function StatisticsSection() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
       <StatCard
         title="Tổng số lượng người dùng"
         value={userCount}
-        change="+15%" // bạn có thể tính % nếu muốn
-        textColor="text-blue-500"
-        changeColor="text-green-500"
+        textColor="text-blue-600"
       />
       <StatCard
         title="Tổng số tin nhắn được lưu"
         value={messageCount.toLocaleString()}
-        change="-8.5%" // placeholder
-        textColor="text-red-400"
-        changeColor="text-red-500"
+        textColor="text-red-500"
       />
       <StatCard
         title="Tổng số người dùng đang trực tuyến"
         value={onlineUserCount}
-        change="-85.5%" // placeholder
         textColor="text-green-500"
-        changeColor="text-red-500"
       />
     </div>
   );
