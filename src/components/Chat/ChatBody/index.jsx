@@ -38,12 +38,9 @@ export default function ChatBody({
         friend.fullName === "embeddedAIByConnectee"
       ) {
         try {
-          const res = await axios.get(
-            `${API_URL}/api/ai/get-history`,
-            {
-              withCredentials: true,
-            }
-          );
+          const res = await axios.get(`${API_URL}/api/ai/get-history`, {
+            withCredentials: true,
+          });
           onAiMess(res.data);
         } catch (error) {
           console.error("Failed to get AI chat history", error);
@@ -115,27 +112,31 @@ export default function ChatBody({
       <div
         className="flex-1 flex items-center justify-center"
         style={{
-          backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827", // gray-50 / gray-900
-          color: scrMode === "light" ? "#374151" : "#ffffff", // gray-700 / white
+          backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827",
+          color: scrMode === "light" ? "#374151" : "#ffffff",
         }}
       >
-        {locales[lang].chooseFriend}
+        <span className="text-sm sm:text-base">
+          {locales[lang].chooseFriend}
+        </span>
       </div>
     );
   }
-  
 
   return (
     <div
       ref={chatContainerRef}
-      className="flex-1 overflow-y-auto p-6 space-y-4"
+      className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4"
       style={{
-        maxHeight: "calc(100vh - 150px)",
-        backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827", // gray-50 / gray-900
+        maxHeight: "calc(100vh - 180px)",
+        backgroundColor: scrMode === "light" ? "#f9fafb" : "#111827",
       }}
     >
       {loading && !isEmbeddedAI ? (
-        <div className="justify-center" style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}>
+        <div
+          className="flex justify-center text-sm"
+          style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
+        >
           {locales[lang].fetchMessage}
         </div>
       ) : (
@@ -145,7 +146,7 @@ export default function ChatBody({
             friend.fullName === "embeddedAIByConnectee" ? (
               aiMess.length === 0 ? (
                 <div
-                  className="justify-center"
+                  className="flex justify-center text-sm"
                   style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
                 >
                   {locales[lang].messageNotAvailable}
@@ -156,10 +157,10 @@ export default function ChatBody({
                     {/* Prompt (user) */}
                     <div className="flex justify-end mb-2">
                       <div
-                        className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                        className="max-w-[80%] sm:max-w-[70%] p-2 sm:p-3 shadow text-xs sm:text-sm rounded-2xl"
                         style={{
                           backgroundColor:
-                            scrMode === "light" ? "#d1fae5" : "#065f46", // green-100 / green-800
+                            scrMode === "light" ? "#d1fae5" : "#065f46",
                           color: scrMode === "light" ? "#000" : "#fff",
                         }}
                       >
@@ -167,21 +168,21 @@ export default function ChatBody({
                         <div
                           className="flex justify-end text-xs mt-1"
                           style={{
-                            color: scrMode === "light" ? "#9ca3af" : "#d1d5db", // gray-400 / gray-300
+                            color: scrMode === "light" ? "#9ca3af" : "#d1d5db",
                           }}
                         >
                           <span>{formatTimestamp(msg.timestamp)}</span>
                         </div>
                       </div>
                     </div>
-  
+
                     {/* Response (AI) */}
                     <div className="flex justify-start mb-4">
                       <div
-                        className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                        className="max-w-[80%] sm:max-w-[70%] p-2 sm:p-3 shadow text-xs sm:text-sm rounded-2xl"
                         style={{
                           backgroundColor:
-                            scrMode === "light" ? "#fff" : "#1f2937", // white / gray-800
+                            scrMode === "light" ? "#fff" : "#1f2937",
                           color: scrMode === "light" ? "#000" : "#fff",
                         }}
                       >
@@ -215,6 +216,7 @@ export default function ChatBody({
               <>
                 {chatMessages.length === 0 && messages.length === 0 ? (
                   <div
+                    className="flex justify-center text-sm"
                     style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
                   >
                     {locales[lang].messageNotAvailable}
@@ -234,10 +236,10 @@ export default function ChatBody({
                           key={`msg-${idx}`}
                           className={`flex ${
                             isMyMessage(msg) ? "justify-end" : "justify-start"
-                          }`}
+                          } mb-2`}
                         >
                           <div
-                            className="max-w-[70%] p-3 shadow text-sm rounded-2xl"
+                            className="max-w-[80%] sm:max-w-[70%] p-2 sm:p-3 shadow text-xs sm:text-sm rounded-2xl"
                             style={{
                               backgroundColor: isMyMessage(msg)
                                 ? scrMode === "light"
@@ -281,6 +283,7 @@ export default function ChatBody({
             )
           ) : (
             <div
+              className="flex justify-center text-sm"
               style={{ color: scrMode === "light" ? "#6b7280" : "#d1d5db" }}
             >
               {locales[lang].pleaseSelectFriend}
@@ -290,5 +293,4 @@ export default function ChatBody({
       )}
     </div>
   );
-  
 }
