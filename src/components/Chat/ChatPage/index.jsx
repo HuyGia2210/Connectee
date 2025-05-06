@@ -1,11 +1,10 @@
-// src/components/Chat/ChatPage.jsx
 import Sidebar from "../Sidebar";
 import ChatHeader from "../ChatHeader";
 import ChatBody from "../ChatBody";
 import MessageInput from "../MessageInput";
 import { useState, useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
-import axios from "axios"; // Dùng axios để gọi API
+import axios from "axios";
 
 export default function ChatPage({ lang, scrMode }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
@@ -13,12 +12,18 @@ export default function ChatPage({ lang, scrMode }) {
   const [aiChatMess, setAiChatMess] = useState([]);
   const [loading, setLoading] = useState(false);
   const [onlineMap, setOnlineMap] = useState({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const stompRef = useRef(null);
   const myNick = useRef(localStorage.getItem("nickname"));
 
   const handleSelectFriend = (f) => {
     setSelectedFriend(f);
     setMessages([]);
+    setIsSidebarOpen(false); // Đóng sidebar khi chọn bạn trên mobile
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const API_URL = import.meta.env.VITE_API_URL;
@@ -44,7 +49,6 @@ export default function ChatPage({ lang, scrMode }) {
     }
   };
 
-  // 1. WebSocket chỉ kết nối 1 lần và nhận tin nhắn sau đó hiện lên theo thời gian thực
   useEffect(() => {
     if (!myNick.current) return console.error("No nickname in localStorage");
 
@@ -53,19 +57,16 @@ export default function ChatPage({ lang, scrMode }) {
       connectHeaders: {},
       debug: (str) => console.log(str),
       onConnect: () => {
-
         client.subscribe("/user/queue/messages", async (message) => {
           const msg = JSON.parse(message.body);
 
           try {
-            // Gọi API để lấy nickname từ username của sender
             const res = await axios.get(
               `${API_URL}/api/user/get-nickname-by-username?username=` +
                 msg.receiver
             );
 
             if (res.status === 200) {
-              // Thay sender bằng nickname đã lấy được
               msg.receiver = res.data;
             }
           } catch (error) {
@@ -73,14 +74,12 @@ export default function ChatPage({ lang, scrMode }) {
           }
 
           try {
-            // Gọi API để lấy nickname từ username của sender
             const res = await axios.get(
               `${API_URL}/api/user/get-nickname-by-username?username=` +
                 msg.sender
             );
 
             if (res.status === 200) {
-              // Thay sender bằng nickname đã lấy được
               msg.sender = res.data;
             }
           } catch (error) {
@@ -92,7 +91,6 @@ export default function ChatPage({ lang, scrMode }) {
             timestamp: Date.now(),
           };
 
-          // thêm vào danh sách messages chung (không filter)
           setMessages((prev) => [...prev, newMsg]);
         });
 
@@ -118,7 +116,6 @@ export default function ChatPage({ lang, scrMode }) {
     };
   }, []);
 
-  //Gửi tin nhắn đi sau đó hiện tin nhắn lên UI
   const handleSend = async (content) => {
     if (!selectedFriend) return;
 
@@ -155,14 +152,12 @@ export default function ChatPage({ lang, scrMode }) {
       }
     } else {
       try {
-        // Gọi API để lấy nickname từ username của sender
         const res = await axios.get(
           `${API_URL}/api/user/get-username-by-nickname?nickname=` +
             selectedFriend.nickname
         );
 
         if (res.status === 200) {
-          // Thay sender bằng nickname đã lấy được
           receiverUsername = res.data;
         }
       } catch (error) {
@@ -174,8 +169,6 @@ export default function ChatPage({ lang, scrMode }) {
         content,
       };
 
-
-      // Echo ngay cho UI
       setMessages((prev) => [
         ...prev,
         {
@@ -194,15 +187,56 @@ export default function ChatPage({ lang, scrMode }) {
   };
 
   return (
-    <div className="flex">
-      <Sidebar
-        onSelectFriend={handleSelectFriend}
-        onlineFriend={onlineMap}
-        selectedFriend={selectedFriend}
-        lang={lang}
-        scrMode={scrMode}
-      />
-      <div id="chatArea" className="flex-1 flex flex-col" style={{backgroundColor: scrMode !== "light" && "#1f2937"}}>
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar - Hidden on mobile, toggle with hamburger */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 md:w-80 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 transition-transform duration-300 ease-in-out md:static md:flex md:flex-col md:border-r ${
+          scrMode === "dark"
+            ? "bg-gray-900 text-white border-gray-700"
+            : "bg-white text-black border-gray-300"
+        }`}
+      >
+        <Sidebar
+          onSelectFriend={handleSelectFriend}
+          onlineFriend={onlineMap}
+          selectedFriend={selectedFriend}
+          lang={lang}
+          scrMode={scrMode}
+        />
+      </div>
+
+      {/* Hamburger Button for Mobile */}
+      {!isSidebarOpen && (
+        <button
+          className="md:hidden fixed top-12 left-4 z-50 text-blue-600 focus:outline-none"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            ></path>
+          </svg>
+        </button>
+      )}
+
+      {/* Chat Area */}
+      <div
+        id="chatArea"
+        className="flex-1 flex flex-col"
+        style={{ backgroundColor: scrMode === "dark" && "#1f2937" }}
+      >
         <ChatHeader friend={selectedFriend} lang={lang} scrMode={scrMode} />
         <ChatBody
           friend={selectedFriend}
@@ -223,6 +257,14 @@ export default function ChatPage({ lang, scrMode }) {
           scrMode={scrMode}
         />
       </div>
+
+      {/* Overlay when sidebar is open on mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-40"
+          onClick={toggleSidebar}
+        ></div>
+      )}
     </div>
   );
 }
