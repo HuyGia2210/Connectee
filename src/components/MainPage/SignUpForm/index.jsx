@@ -20,7 +20,6 @@ export default function SignUpForm({ onBack }) {
     dob: "",
   });
 
-  // Error states for username and nickname
   const [firstNameError, setFirstNameError] = useState(null);
   const [lastNameError, setLastNameError] = useState(null);
   const [dayError, setDayError] = useState(null);
@@ -136,18 +135,17 @@ export default function SignUpForm({ onBack }) {
         throw new Error("Không thể kiểm tra biệt danh.");
       }
 
-      // Kiểm tra xem phản hồi có phải là JSON hợp lệ
-      const text = await res.text(); // Chuyển sang text trước
+      const text = await res.text();
       try {
-        const data = JSON.parse(text); // Cố gắng parse thành JSON
-        return data; // Trả về true nếu trùng, false nếu không trùng
+        const data = JSON.parse(text);
+        return data;
       } catch (e) {
         console.error("Phản hồi không phải JSON hợp lệ:", e);
-        return false; // Xử lý khi JSON không hợp lệ
+        return false;
       }
     } catch (error) {
       console.error("Lỗi khi kiểm tra biệt danh:", error);
-      return false; // Giả sử không trùng khi có lỗi
+      return false;
     }
   };
 
@@ -162,27 +160,24 @@ export default function SignUpForm({ onBack }) {
         throw new Error("Không thể kiểm tra tên đăng nhập.");
       }
 
-      // Kiểm tra phản hồi là JSON hợp lệ
-      const text = await res.text(); // Chuyển sang text trước
+      const text = await res.text();
       try {
-        const data = JSON.parse(text); // Cố gắng parse thành JSON
-        return data; // Trả về true nếu trùng, false nếu không trùng
+        const data = JSON.parse(text);
+        return data;
       } catch (e) {
         console.error("Phản hồi không phải JSON hợp lệ:", e);
-        return false; // Xử lý khi JSON không hợp lệ
+        return false;
       }
     } catch (error) {
       console.error("Lỗi khi kiểm tra tên đăng nhập:", error);
-      return false; // Giả sử không trùng khi có lỗi
+      return false;
     }
   };
 
-  // Handle username blur
   const handleUsernameBlur = async (e) => {
     const isExist = await checkUsernameAvailability(form.username);
     if (isExist) {
       setUsernameError("Username đã tồn tại!");
-      // Suggest some random usernames
       setSuggestedUsernames(generateRandomSuggestions("username"));
     } else {
       setUsernameError(null);
@@ -191,12 +186,10 @@ export default function SignUpForm({ onBack }) {
     }
   };
 
-  // Handle nickname blur
   const handleNicknameBlur = async (e) => {
     const isExist = await checkNicknameAvailability(form.nickname);
     if (isExist) {
       setNicknameError("Nickname đã tồn tại!");
-      // Suggest some random nicknames
       setSuggestedNicknames(generateRandomSuggestions("nickname"));
     } else {
       setNicknameError(null);
@@ -217,7 +210,6 @@ export default function SignUpForm({ onBack }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Nếu có lỗi thì không cho phép đăng ký
     if (
       usernameError ||
       nicknameError ||
@@ -233,13 +225,12 @@ export default function SignUpForm({ onBack }) {
       return;
     }
 
-    // Chuẩn hóa dữ liệu theo DTO RegisterRequest
     const fullName = `${form.lastName} ${form.firstName}`;
     const dob = `${form.year}-${form.month.padStart(
       2,
       "0"
     )}-${form.day.padStart(2, "0")}`;
-    const gender = form.gender.toUpperCase(); // MALE / FEMALE / OTHER
+    const gender = form.gender.toUpperCase();
 
     const payload = {
       username: form.username,
@@ -279,15 +270,15 @@ export default function SignUpForm({ onBack }) {
     } catch (err) {
       console.error(err);
       alert("Lỗi server");
-    }finally{
+    } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-lg shadow-md mx-auto">
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <input
               name="lastName"
@@ -298,7 +289,7 @@ export default function SignUpForm({ onBack }) {
               onBlur={checkNullInput}
             />
             {lastNameError !== null && (
-              <span className="text-red-500">{lastNameError}</span>
+              <span className="text-red-500 text-sm">{lastNameError}</span>
             )}
           </div>
           <div>
@@ -311,7 +302,7 @@ export default function SignUpForm({ onBack }) {
               onBlur={checkNullInput}
             />
             {firstNameError !== null && (
-              <span className="text-red-500">{firstNameError}</span>
+              <span className="text-red-500 text-sm">{firstNameError}</span>
             )}
           </div>
         </div>
@@ -320,7 +311,7 @@ export default function SignUpForm({ onBack }) {
           <div>
             <select
               name="day"
-              className="px-4 py-2 border rounded-md"
+              className="px-4 py-2 border rounded-md w-full"
               onChange={handleChange}
               onBlur={checkNullInput}
             >
@@ -332,13 +323,13 @@ export default function SignUpForm({ onBack }) {
               ))}
             </select>
             {dayError !== null && (
-              <span className="text-red-500">{dayError}</span>
+              <span className="text-red-500 text-sm">{dayError}</span>
             )}
           </div>
           <div>
             <select
               name="month"
-              className="px-4 py-2 border rounded-md"
+              className="px-4 py-2 border rounded-md w-full"
               onChange={handleChange}
               onBlur={checkNullInput}
             >
@@ -350,13 +341,13 @@ export default function SignUpForm({ onBack }) {
               ))}
             </select>
             {monthError !== null && (
-              <span className="text-red-500">{monthError}</span>
+              <span className="text-red-500 text-sm">{monthError}</span>
             )}
           </div>
           <div>
             <select
               name="year"
-              className="px-4 py-2 border rounded-md"
+              className="px-4 py-2 border rounded-md w-full"
               onChange={handleChange}
               onBlur={checkNullInput}
             >
@@ -371,7 +362,7 @@ export default function SignUpForm({ onBack }) {
               })}
             </select>
             {yearError !== null && (
-              <span className="text-red-500">{yearError}</span>
+              <span className="text-red-500 text-sm">{yearError}</span>
             )}
           </div>
         </div>
@@ -390,7 +381,7 @@ export default function SignUpForm({ onBack }) {
             <option value="other">Khác</option>
           </select>
           {genderError !== null && (
-            <span className="text-red-500">{genderError}</span>
+            <span className="text-red-500 text-sm">{genderError}</span>
           )}
         </div>
 
@@ -404,63 +395,66 @@ export default function SignUpForm({ onBack }) {
             onBlur={checkNullInput}
           />
           {emailError !== null && (
-            <span className="text-red-500">{emailError}</span>
+            <span className="text-red-500 text-sm">{emailError}</span>
           )}
         </div>
 
-        <input
-          name="nickname"
-          type="text"
-          placeholder="Biệt danh (Không trùng biệt danh với người khác)"
-          className={`w-full px-4 py-2 border rounded-md ${
-            nicknameError ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-          onBlur={handleNicknameBlur}
-        />
-        {nicknameError && <p className="text-red-500">{nicknameError}</p>}
-        <div className="flex overflow-x-auto space-x-4 mt-2 items-center">
-          {nicknameError != null && nicknameError != "Không được để trống" && (
-            <span className="whitespace-nowrap">
-              Một số biệt danh bạn có thể chọn:{" "}
-            </span>
-          )}
-          {suggestedNicknames.map((suggestion, index) => (
-            <span
-              key={index}
-              className="bg-gray-200 py-1 px-3 rounded-md hover:bg-gray-300"
-            >
-              {suggestion}
-            </span>
-          ))}
+        <div>
+          <input
+            name="nickname"
+            type="text"
+            placeholder="Biệt danh (Không trùng biệt danh với người khác)"
+            className={`w-full px-4 py-2 border rounded-md ${
+              nicknameError ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+            onBlur={handleNicknameBlur}
+          />
+          {nicknameError && <p className="text-red-500 text-sm">{nicknameError}</p>}
+          <div className="flex flex-wrap gap-2 mt-2">
+            {nicknameError != null && nicknameError != "Không được để trống" && (
+              <span className="text-sm text-gray-600">
+                Một số biệt danh bạn có thể chọn:
+              </span>
+            )}
+            {suggestedNicknames.map((suggestion, index) => (
+              <span
+                key={index}
+                className="bg-gray-200 py-1 px-3 rounded-md hover:bg-gray-300 text-sm"
+              >
+                {suggestion}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <input
-          name="username"
-          type="text"
-          placeholder="Tên đăng nhập (Không trùng với người khác)"
-          className={`w-full px-4 py-2 border rounded-md ${
-            usernameError ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-          onBlur={handleUsernameBlur}
-        />
-        {usernameError && <p className="text-red-500">{usernameError}</p>}
-
-        <div className="flex overflow-x-auto space-x-4 mt-2 items-center">
-          {usernameError != null && usernameError != "Không được để trống" && (
-            <span className="whitespace-nowrap">
-              Một số tên đăng nhập bạn có thể chọn:{" "}
-            </span>
-          )}
-          {suggestedUsernames.map((suggestion, index) => (
-            <span
-              key={index}
-              className="bg-gray-200 py-1 px-3 rounded-md hover:bg-gray-300"
-            >
-              {suggestion}
-            </span>
-          ))}
+        <div>
+          <input
+            name="username"
+            type="text"
+            placeholder="Tên đăng nhập (Không trùng với người khác)"
+            className={`w-full px-4 py-2 border rounded-md ${
+              usernameError ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+            onBlur={handleUsernameBlur}
+          />
+          {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
+          <div className="flex flex-wrap gap-2 mt-2">
+            {usernameError != null && usernameError != "Không được để trống" && (
+              <span className="text-sm text-gray-600">
+                Một số tên đăng nhập bạn có thể chọn:
+              </span>
+            )}
+            {suggestedUsernames.map((suggestion, index) => (
+              <span
+                key={index}
+                className="bg-gray-200 py-1 px-3 rounded-md hover:bg-gray-300 text-sm"
+              >
+                {suggestion}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div>
@@ -473,7 +467,7 @@ export default function SignUpForm({ onBack }) {
             onBlur={checkNullInput}
           />
           {passwordError != null && (
-            <span className="text-red-500">{passwordError}</span>
+            <span className="text-red-500 text-sm">{passwordError}</span>
           )}
         </div>
 

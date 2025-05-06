@@ -1,20 +1,19 @@
-// src/assets/components/LoginForm/index.jsx
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios"; // Dùng axios để gọi API
+import axios from "axios";
 
 export default function LoginForm({ onSwitchToSignup }) {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(""); // Lưu username
-  const [password, setPassword] = useState(""); // Lưu password
-  const [error, setError] = useState(""); // Lưu lỗi nếu có
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // Disable nút
+    setIsSubmitting(true);
 
     try {
       const response = await axios.post(
@@ -39,12 +38,12 @@ export default function LoginForm({ onSwitchToSignup }) {
       console.error(err);
       setError("Tên đăng nhập hoặc mật khẩu không đúng!");
     } finally {
-      setIsSubmitting(false); // Enable nút lại (dù login thành công hay thất bại)
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-lg shadow-md mx-auto">
       <form className="space-y-4" onSubmit={handleLogin}>
         {/* Email or Phone */}
         <div>
@@ -96,9 +95,6 @@ export default function LoginForm({ onSwitchToSignup }) {
           {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
       </form>
-
-      {/* Quên mật khẩu */}
-      <div className="mt-4 text-center"></div>
     </div>
   );
 }
