@@ -20,10 +20,10 @@ export default function AuthPage() {
 
   return (
     <>
-      <div className="homePage min-h-screen overflow-y-auto">
+      <div className="homePage min-h-screen overflow-y-auto flex flex-col">
         <HeaderNav />
-        <div className="grid grid-cols-2 grid-rows-2">
-          <div className="col-span-1 row-span-2">
+        <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 px-4 sm:px-8 py-6">
+          <div className="flex flex-col items-center md:items-start">
             <Introsection />
             {showSignup ? (
               <SignUpForm onBack={handleBackToLogin} />
@@ -31,7 +31,7 @@ export default function AuthPage() {
               <LoginForm onSwitchToSignup={handleSwitchToSignup} />
             )}
           </div>
-          <div className="col-span-1 row-span-2">
+          <div className="hidden md:block">
             <Illustration />
           </div>
         </div>
