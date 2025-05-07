@@ -3,7 +3,6 @@ import React from "react";
 
 function LanguageSetting({ lang = "vn", setLang, scrMode }) {
   const isDark = scrMode === "dark";
-  
 
   const setLanguageSetting = (e) => {
     const selected = e.target.value;
@@ -17,7 +16,9 @@ function LanguageSetting({ lang = "vn", setLang, scrMode }) {
       }`}
     >
       <div>
-        <label className="block mb-1 text-sm font-medium">{locales[lang].selectLanguage}</label>
+        <label className="block mb-1 text-sm font-medium">
+          {locales[lang].selectLanguage}
+        </label>
         <select
           value={lang}
           onChange={setLanguageSetting}
@@ -29,8 +30,13 @@ function LanguageSetting({ lang = "vn", setLang, scrMode }) {
         >
           <option value="vn">Tiếng Việt</option>
           <option value="en">English</option>
-          <option value="da">Danske</option>
+          <option value="da">Dansk</option>
           <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="zh">中文</option>
         </select>
       </div>
     </div>
