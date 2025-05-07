@@ -29,6 +29,8 @@ function LanguageSetting({ lang = "vn", setLang, scrMode }) {
         >
           <option value="vn">Tiếng Việt</option>
           <option value="en">English</option>
+          <option value="da">Danske</option>
+          <option value="de">Deutsch</option>
         </select>
       </div>
     </div>
